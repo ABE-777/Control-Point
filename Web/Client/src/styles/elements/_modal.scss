@@ -1,0 +1,99 @@
+
+.modal-dialog {
+  @media (min-width: $bp-sm) {
+    max-width: 430px;
+  }
+}
+
+.modal-content {
+  padding: 15px;
+  border: 0;
+  border-radius: 10px;
+  @media (min-width: $bp-sm) {
+    padding: 25px 35px;
+  }
+
+max-height: calc(100% - 100px) !important;
+position: fixed !important;
+top: 50% !important;
+left: 50% !important;
+transform: translate(-50%, -50%) !important;
+max-width: 430px !important;
+  
+}
+
+.cp-modal {
+  &__header {
+    margin-bottom: 15px;
+  }
+
+  &__content {
+    margin-bottom: 30px;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+
+    .flat {
+      margin-left: 15px;
+    }
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 700;
+
+    @media (min-width: $bp-sm) {
+      font-size: 24px;
+    }
+  }
+
+  &__text {
+    margin-bottom: 20px;
+    color: $c-grey--dark2;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  &__bgpurple {
+    background-color: $c-purple;
+  }
+
+  &__car-riders {
+    padding: 15px;
+  }
+}
+
+.car-riders .modal-content{
+  padding: 0px;
+}
+
+.cp-car-rider-content {
+  margin: 15px;
+}
+
+.cp-car-rider-button {
+  padding: 12px 12px;
+}
+
+[class*='close-'] {
+  color: white;
+  font: 14px/100% arial, sans-serif;
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  right: 15px;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #fff;
+  top: 15px;
+}
+
+.close-thik:after {
+  content: '✖'; /* UTF-8 symbol */
+}
+
+.close-thik:hover {
+  text-decoration: none;
+  color: white;
+}

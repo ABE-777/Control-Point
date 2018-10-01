@@ -1,0 +1,9 @@
+D:\Projects\control-point\control-point\Database\bin\Release\Database.dacpac
+D:\Projects\control-point\control-point\Database\bin\Release\Database1.dll
+D:\Projects\control-point\control-point\Database\bin\Release\Database1.pdb
+D:\Projects\control-point\control-point\Database\obj\Release\Model.xml
+D:\Projects\control-point\control-point\Database\obj\Release\refactor.xml
+D:\Projects\control-point\control-point\Database\obj\Release\postdeploy.sql
+D:\Projects\control-point\control-point\Database\obj\Release\predeploy.sql
+D:\Projects\control-point\control-point\Database\obj\Release\Database1.dll
+D:\Projects\control-point\control-point\Database\obj\Release\Database1.pdb

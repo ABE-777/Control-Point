@@ -1,0 +1,111 @@
+.flex {
+  display: flex;
+
+  &.align-baseline {
+    align-items: baseline;
+  }
+
+  &.justify {
+    justify-content: space-between;
+  }
+
+  .item {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+
+  .align-end {
+    align-self: flex-end;
+    margin: unset;
+  }
+}
+
+app-paginator {
+  .pager-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 54px;
+    width: 50%;
+    font-size: 16px;
+    padding-left: 24px;
+  }
+}
+
+.bold {
+  font-weight: $-text-weight-bold;
+}
+
+.hidden {
+  display: none;
+}
+
+.txt-align-center {
+  text-align: center;
+}
+
+.overflow-visible {
+  overflow: visible;
+}
+
+.white-bg {
+  background-color: $c-white;
+}
+
+.btn.dd-toggle {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+.btn:focus, .btn.focus {
+  box-shadow: none;
+}
+
+.svg-sprite {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.lane-blank {
+  border: 1px solid $c-grey--dark1;
+  background-color: transparent;
+}
+
+.lane-yellow {
+  background-color: $c-yellow;
+}
+
+.lane-purple {
+  background-color: $c-purple;
+}
+
+.lane-green {
+  background-color: $c-green;
+}
+
+.lane-orange {
+  background-color: $c-orange;
+}
+
+.lane-blue {
+  background-color: $c-blue;
+}
+
+.lane-red {
+  background-color: $c-red;
+}
+
+.lane-pink {
+  background-color: $c-pink;
+}
+
+.lane-black {
+  background-color: $c-black;
+}

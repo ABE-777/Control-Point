@@ -1,0 +1,92 @@
+<div class="page-container" [ngClass]="{'full-height-page full-height-page--flex-column': !archiveList?.length || !filteredArchiveList?.length}" (click)="handlePageContainerClick($event)">
+  <div class="page-header archive">
+    <div class="page-header__left">
+      <div class="page-header__title">Archive</div>
+
+      <div class="dropdown">
+        <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" (click)="isShow=!isShow">
+          <div *ngIf="selectedDate===startDay"> {{selectedDate | date:'MMMM d, y' }} </div>
+          <div *ngIf="selectedDate!==startDay"> {{startDay | date:'MMMM d, y' }}-{{selectedDate | date:'MMMM d, y' }}</div>
+        </button>
+        <div class="dropdown-menu" [class.show]="isShow" aria-labelledby="dropdownMenu2">
+          <div class="dropdown-item">
+            <div class="calendar-buttons">
+              <button type="button" [class.active]="isActive('btn1')" (click)="setActive('btn1'); updateArchive(maxDate)">Today</button>
+              <button type="button" [class.active]="isActive('btn2')" (click)="setActive('btn2'); updateArchive(yesterday)">Yesterday</button>
+              <button type="button" [class.active]="isActive('btn3')" (click)="setActive('btn3'); setDateRange(15);" [disabled]="!selectedStudent">Last 15 Days</button>
+              <button type="button" [class.active]="isActive('btn4')" (click)="setActive('btn4'); setDateRange(30);" [disabled]="!selectedStudent">Last 30 Days</button>
+              <button type="button" [class.active]="isActive('btn5')" (click)="setActive('btn5');">Specific Day</button>
+              <button type="button" [class.active]="isActive('btn6')" (click)="setActive('btn6'); setDateRange(0);" [disabled]="!selectedStudent">Custom Range</button>
+            </div>
+            <div *ngIf="!selectedStudent || isActive('btn5') || isActive('btn1') || isActive('btn2')">
+              <p-calendar class="cp-input-calendar cp-input-calendar--minimal-input" [(ngModel)]="selectedDate" dateFormat="MM dd yy" [minDate]="minDate" [maxDate]="maxDate" [inline]="true" (onSelect)="setActive('btn5'); updateArchive($event);" ></p-calendar>
+            </div>
+
+            <div *ngIf="selectedStudent && !isActive('btn5') && !isActive('btn1') && !isActive('btn2')">
+              <p-calendar class="cp-input-calendar cp-input-calendar--minimal-input" [(ngModel)]="rangeDates" dateFormat="MM dd yy" selectionMode="range" [minDate]="minDate" [maxDate]="maxDate" [inline]="true" (onSelect)="setActive('btn6'); dateRangeCalendar($event);" ></p-calendar>
+            </div>
+
+          </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="page-header__right">
+      <div class="item" style="width:250px; display:flex;">
+        <p-dropdown [options]="students" optionLabel="name" [(ngModel)]="selectedStudent" placeholder="Search Name" [autoWidth]="false" [filter]="true" name="studentName" (onChange)="setFilteredArchive($event)"></p-dropdown>
+       </div>
+        <button class="item flat accent shadow" [disabled]="!filteredArchiveList.length" (click)="printArchive()">PRINT</button>
+        <button class="item flat accent shadow" [disabled]="!filteredArchiveList.length" (click)="downloadArchiveList()">EXPORT</button>
+      </div>
+    </div>
+
+  <div class="grid-container" *ngIf="filteredArchiveList.length">
+
+    <dx-data-grid class="cp-data-grid" [dataSource]="filteredArchiveList" [showBorders]="false"
+                  [showRowLines]="true" [showColumnLines]="false" [loadPanel]="false"
+                  (onContentReady)="gridReady($event)">
+
+      <dxi-column dataField="externalId" caption="ID" sortOrder="asc" [width]="70"></dxi-column>
+      <dxi-column dataField="studentName" caption="NAME"></dxi-column>
+      <dxi-column dataField="grade" caption="GRADE" [width]="100"></dxi-column>
+      <dxi-column dataField="flight" dataType="text" caption="FLIGHT" [width]="100"></dxi-column>
+      <dxi-column dataField="lane" caption="LANE"></dxi-column>
+      <dxi-column dataField="parentName" caption="PARENT"></dxi-column>
+      <dxi-column dataField="scanningTime" caption="SCAN" dataType="text" [width]="150" alignment="center"></dxi-column>
+      <dxi-column dataField="classroomTime" caption="CLASSROOM" dataType="text" [width]="150" cellTemplate="cellTemplateClass" alignment="center"></dxi-column>
+      <dxi-column dataField="hallwayTime" caption="HALLWAY" dataType="text" [width]="150" cellTemplate="cellTemplateHall" alignment="center"></dxi-column>
+
+      <div *dxTemplate="let data of 'cellTemplateClass'">
+        {{data.value==="-"? "&mdash;" : data.value }}
+      </div>
+
+      <div *dxTemplate="let data of 'cellTemplateHall'">
+        {{data.value==="-"? "&mdash;" : data.value}}
+      </div>
+
+
+      <!-- Pagination -->
+      <dxo-paging [pageSize]="10"></dxo-paging>
+      <dxo-pager [showNavigationButtons]="true"></dxo-pager>
+    </dx-data-grid>
+    <app-paginator></app-paginator>
+  </div>
+
+  <!-- No items screen -->
+  <div class="no-items-view" *ngIf="!archiveList?.length">
+    <div class="no-items-view__image-container no-items-view__image-container--not-clickable no-items-view__image-container--increased-padding">
+      <img class="no-items-view__image" src="assets/images/archive.svg" alt="new school">
+    </div>
+    <p class="no-items-view__text">No records were found, select another day or another student name.</p>
+  </div>
+
+  <!-- No search results screen -->
+  <div class="no-items-view" *ngIf="!filteredArchiveList?.length && archiveList?.length">
+    <div class="no-items-view__image-container no-items-view__image-container--not-clickable no-items-view__image-container--increased-padding">
+      <img class="no-items-view__image" src="assets/images/archive.svg" alt="new school">
+    </div>
+    <p class="no-items-view__text">No records were found that match the specified search criteria</p>
+  </div>
+</div>
+
+<div id="testWrap"></div>

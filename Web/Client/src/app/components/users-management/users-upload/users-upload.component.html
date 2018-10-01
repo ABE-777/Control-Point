@@ -1,0 +1,28 @@
+<div class="full-height-page full-height-page--flex-column page-container">
+  <header class="page-header">
+    <div class="page-header__left">
+      <button class="flat purple icon" [routerLink]="['/users-management']">BACK TO USERS
+        <i class="material-icons">arrow_back</i>
+      </button>
+    </div>
+    <div class="page-header__right">
+      <button class="flat black" (click)="downloadUsersTemplate()">DOWNLOAD TEMPLATE</button>
+    </div>
+  </header>
+
+  <div id="dropZone" class="no-items-view drop-zone" ng2FileDrop [uploader]="fileTransferService.uploader" (fileOver)="fileTransferService.fileOverBase($event)" [ngClass]="{'drop-zone--file-over': fileTransferService.isFileOverDropZone}">
+    <p class="no-items-view__text">Drop your Classroom Teacher files here <br> (files must be in .xlsx)</p>
+
+    <!-- file validation -->
+    <p *ngIf="!fileTransferService.isValidFileExtension" class="warning">"Invalid file selected."</p>
+    <p *ngIf="fileTransferService.isUploadSuccessfull" class="success">{{fileTransferService.message}}</p>
+    <p *ngIf="fileTransferService.isUploadFailed" class="warning">"File upload failed."</p>
+
+    <button class="no-items-view__image-container" (click)="fileUpload.click()">
+      <img class="no-items-view__image" src="assets/images/teacher.svg" alt="teacher">
+    </button>
+
+    <input type="file" name="file" id="file" #fileUpload class="hidden" ng2FileSelect [uploader]="fileTransferService.uploader" />
+    <button class="item flat accent shadow" for="file" (click)="fileUpload.click()">CLICK TO BROWSE</button>
+  </div>
+</div>

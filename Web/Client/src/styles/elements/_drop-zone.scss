@@ -1,0 +1,8 @@
+.drop-zone {
+  border: 3px dashed rgba($c-blue, 0);
+  transition: border-color 300ms;
+
+  &--file-over {
+    border-color: rgba($c-blue, 0.7);
+  }
+}

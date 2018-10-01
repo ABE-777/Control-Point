@@ -1,0 +1,111 @@
+<div class="padding-24">
+  <header class="page-header">
+    <div class="page-header__left">
+      <button class="flat purple icon" [routerLink]="['/students']">
+        BACK TO STUDENTS
+        <i class="material-icons">arrow_back</i>
+      </button>
+    </div>
+
+    <div class="page-header__right">
+      <button class="flat black" *ngIf="!isEdit" [routerLink]="['/students-import']">ADD IN BULK</button>
+    </div>
+  </header>
+
+  <form class="cp-form" #newStudentForm="ngForm">
+    <header class="cp-form__header">
+      <h1 class="cp-form__title">{{ isEdit ? 'Edit Student' : 'Create Student'}}</h1>
+    </header>
+
+    <label class="cp-input-label">ID</label>
+    <input #externalIdInput="ngModel" class="cp-text-input" type="text" [(ngModel)]="studentModel.externalId" name="idInput" whitespace-validator />
+    <!--ID input validation-->
+    <div *ngIf="externalIdInput.invalid"
+         class="alert alert-danger">
+      <div *ngIf="externalIdInput.errors.invalidWhitespace">You can't use white-spaces as external id!</div>
+    </div>
+
+    <label class="cp-input-label">NAME</label>
+    <input #studentNameInput="ngModel" class="cp-text-input" type="text" [(ngModel)]="studentModel.name"
+           name="nameInput" minlength="3" whitespace-validator pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$" required />
+    <!--Student name input validation-->
+    <div *ngIf="studentNameInput.invalid && (studentNameInput.dirty || studentNameInput.touched)"
+         class="alert alert-danger">
+      <div *ngIf="studentNameInput.errors.minlength">Students name should not contain less then 3 symbols!</div>
+      <div *ngIf="studentNameInput.errors.required">Student name required!</div>
+      <div *ngIf="studentNameInput.errors.pattern">Student name is invalid!</div>
+      <div *ngIf="studentNameInput.errors.invalidWhitespace">You can't use white-spaces as students name!</div>
+    </div>
+
+    <label class="cp-input-label">GRADE</label>
+    <input #gradeInput="ngModel" class="cp-text-input" type="text" [(ngModel)]="studentModel.grade"
+           name="gradeInput" whitespace-validator />
+    <!--Grade input validation-->
+    <div *ngIf="gradeInput.invalid"
+         class="alert alert-danger">
+      <div *ngIf="gradeInput.errors.invalidWhitespace">You can't use white-spaces as grade!</div>
+    </div>
+
+    <label class="cp-input-label">CLASSROOM</label>
+    <p-dropdown [options]="classrooms" [(ngModel)]="studentModel.classroom"
+                optionLabel="name" [autoWidth]="false" name="classroomInput"
+                placeholder="Select Classroom" (ngModelChange)="clearClassroomName($event)" required>
+    </p-dropdown>
+
+    <div *ngIf="studentModel.classroom.id === -1">
+      <label class="cp-input-label">CLASSROOM NAME</label>
+      <input #classRoomNameInput="ngModel" class="cp-text-input" [(ngModel)]="studentModel.classroom.name"
+             name="classRoomNameInput" whitespace-validator required/>
+      <div *ngIf="classRoomNameInput.invalid && (classRoomNameInput.dirty || classRoomNameInput.touched)"
+           class="alert alert-danger">
+        <div *ngIf="classRoomNameInput.errors.required">Classroom name is required!</div>
+        <div *ngIf="classRoomNameInput.errors.pattern">Classroom name is invalid!</div>
+        <div *ngIf="classRoomNameInput.errors.invalidWhitespace">You can't use white-spaces as classrooms name!</div>
+      </div>
+    </div>
+
+
+    <div *ngIf="isEdit">
+      <label class="cp-input-label">PARENT/GUARDIAN</label>
+      <p-dropdown #parentInput="ngModel" [autoWidth]="false"
+                  name="parentInput" [options]="parents" [(ngModel)]="selectedParent"
+                  (ngModelChange)="changeParent()" optionLabel="name" [filter]="true">
+      </p-dropdown>
+    </div>
+
+    <div *ngIf="!isEdit || (selectedParent.name == 'Add Parent/Guardian' && selectedParent.name !== null) ">
+      <label class="cp-input-label">PARENT/GUARDIAN NAME</label>
+      <input #parentNameInput="ngModel" class="cp-text-input" type="text"
+             [(ngModel)]="studentModel.studentParent.name" minlength="3"
+             maxlength="256" name="parentNameInput" pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$"
+             whitespace-validator required />
+      <!--Parent name validation-->
+      <div *ngIf="parentNameInput.invalid && (parentNameInput.dirty || parentNameInput.touched)"
+           class="alert alert-danger">
+        <div *ngIf="parentNameInput.errors.minlength">Parent/guardian name should not contain less then 3 symbols!</div>
+        <div *ngIf="parentNameInput.errors.maxlength">Parent/guardian name should not contain more then 256 symbols!</div>
+        <div *ngIf="parentNameInput.errors.invalidWhitespace">You can use white-spaces as a parent name!</div>
+        <div *ngIf="parentNameInput.errors.required">Parent/guardian name is required!</div>
+        <div *ngIf="parentNameInput.errors.pattern">Parent/guardian name is invalid!</div>
+      </div>
+
+      <label class="cp-input-label">PARENT/GUARDIAN EMAIL</label>
+      <input #parentEmailInput="ngModel" class="cp-text-input" type="text" [(ngModel)]="studentModel.studentParent.email"
+             [ngModelOptions]="{updateOn: 'blur'}" name="parentEmailInput" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}"
+             appIsUserParent required />
+      <!--Parent email validation-->
+      <div *ngIf="parentEmailInput.invalid && (parentEmailInput.dirty || parentEmailInput.touched)"
+           class="alert alert-danger">
+        <div *ngIf="parentEmailInput.errors.pattern">Parent/guardian email is incorrect!</div>
+        <div *ngIf="parentEmailInput.errors.required">Parent/guardian email is required!</div>
+        <div *ngIf="parentEmailInput.errors.isParent"> The following parent’s email {{studentModel.studentParent.email}} is already being used as a {{parentEmailInput.errors.role.value}}.<br> Please use another email.</div>
+      </div>
+    </div>
+
+
+
+    <footer class="cp-form__footer">
+      <button type="submit" class="flat accent shadow" [disabled]="newStudentForm.form.invalid || studentModel.classroom.id === 0 " (click)="submitStudent()">{{ isEdit ? 'SAVE' : 'CREATE'}}</button>
+    </footer>
+  </form>
+</div>

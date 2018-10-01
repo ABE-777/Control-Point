@@ -1,0 +1,242 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="page-header__left">
+      <h3 class="page-header__title">School Configuration</h3>
+    </div>
+    <div class="page-header__right">
+      <button class="flat black" (click)="ModalService.openModal(template)">END SCHOOL YEAR</button>
+    </div>
+  </div>
+
+  <form #settingsForm="ngForm" class="cp-form cp-form--big">
+    <!-- LANES -->
+    <!-- Number of lanes -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="cp-form__header">
+          <h3 class="cp-form__title">Lanes</h3>
+        </div>
+
+        <label class="cp-input-label">NUMBER OF LANES</label>
+        <p-dropdown [options]="lanesOptions" [(ngModel)]="schoolSettingsModel.countOfLanes" (onChange)="processLanesObjects()" placeholder="Select number of lanes"
+                    [autoWidth]="false" name="laneNumberSelect" required></p-dropdown>
+      </div>
+    </div>
+    <!-- Lanes name and color -->
+    <div class="row">
+      <div class="col-md-6" *ngFor="let lane of schoolSettingsModel.lanes; let i = index">
+        <label class="cp-input-label">LANE {{i+1}}</label>
+
+        <div class="flex">
+          <div class="dropdown color-selector-drop-down">
+            <button class="dropdown-toggle" type="button" [disabled]="!schoolSettingsModel.lanes.length || schoolSettingsModel.lanes.length < 1"
+                    id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="color-palette-container">
+                <div class="color-palette-item lane-{{ lane.color ? lane.color.toLowerCase() : 'blank' }}"></div>
+              </div>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <button *ngFor="let colorOption of filteredColorOptions" class="dropdown-item" type="button" (click)="assignColorToLane(i, colorOption.value)">
+                <div class="color-palette-item lane-{{ colorOption.label }}"></div>
+              </button>
+            </div>
+          </div>
+          <input class="cp-text-input margin-left-20" type="text" [(ngModel)]="lane.name" value="lane.name" name="colorInput-{{i}}"
+                 (blur)="trimModel($event.target)" placeholder="{{lane.color}}" />
+        </div>
+      </div>
+    </div>
+    <!-- Cars per lane and procedure -->
+    <div class="row">
+      <div class="col-md-6">
+        <label class="cp-input-label">NUMBER OF CARS PER LANE</label>
+        <p-dropdown [options]="carsPerLaneOptions" [(ngModel)]="schoolSettingsModel.carsPerLane" placeholder="Select number of cars per lane"
+                    [autoWidth]="false" name="carPerLaneSelect" required></p-dropdown>
+      </div>
+    </div>
+
+    <!-- LANE SCANNING PROCEDURE -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="cp-form__header">
+          <h3 class="cp-form__title">Lane Scanning Procedure</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <label class="cp-input-label">LANE SCANNING PROCEDURE</label>
+        <p-dropdown [options]="scanningProceduresOptions" [(ngModel)]="schoolSettingsModel.laneLogisticTypeId" placeholder="Select"
+                    [autoWidth]="false" name="laneScanningProcedure" (onChange)="checkScannerUsers(); resetLanesUsers()" required></p-dropdown>
+      </div>
+      <!-- only if single scanner selected -->
+      <div class="col-md-6" *ngIf="schoolSettingsModel.laneLogisticTypeId === 1 && schoolSettingsModel.lanes?.length">
+        <label class="cp-input-label">LANE SCANNING USER</label>
+        <p-dropdown [options]="scannerUsersOptions" placeholder="Select Scanner" [(ngModel)]="schoolSettingsModel.lanes[0].userId"
+                    [autoWidth]="false" name="scannerUser" (onChange)="setUserToLanes($event)" [filter]="true" (onChange)="toggleNewScannerUser($event, 0, schoolSettingsModel.lanes[0].color)" required></p-dropdown>
+
+        <div *ngIf="schoolSettingsModel.lanes[0].userId === 0">
+          <label class="cp-input-label">NEW SCANNER NAME</label>
+          <input class="cp-text-input" type="text" placeholder="Enter scanner name" [(ngModel)]="newScannerUsers[0].name"
+                 name="newScannerName" #newScannerName="ngModel" pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$"
+                 minlength="3" whitespace-validator required />
+          <!-- nameInput validation -->
+          <div *ngIf="newScannerName.invalid && (newScannerName.dirty || newScannerName.touched)" class="alert alert-danger">
+            <div *ngIf="newScannerName?.errors.minlength">User name should not contain less then 3 symbols!</div>
+            <div *ngIf="newScannerName?.errors.required">User name is required</div>
+            <div *ngIf="newScannerName?.errors.pattern">User name is invalid</div>
+            <div *ngIf="newScannerName?.errors.invalidWhitespace"> You can't use whitespaces as user name!</div>
+          </div>
+
+
+          <label class="cp-input-label">EMAIL</label>
+          <input class="cp-text-input" type="text" placeholder="Enter scanner email address" [(ngModel)]="newScannerUsers[0].email" name="newScannerEmail" #newScannerEmail="ngModel" [ngModelOptions]="{updateOn: 'blur'}" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}" appIsUserExist required />
+
+          <!-- emailInput validation -->
+          <div *ngIf="newScannerEmail.invalid && (newScannerEmail.dirty || newScannerEmail.touched)"
+               class="alert alert-danger">
+            <div *ngIf="newScannerEmail?.errors.pattern">Email is invalid</div>
+            <div *ngIf="newScannerEmail?.errors.required">Email is required</div>
+            <div *ngIf="newScannerEmail?.errors.isEmailExist">User with email {{ newScannerEmail.model }} already exist</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- only if multiple scanners selected -->
+    <div class="row" *ngIf="schoolSettingsModel.laneLogisticTypeId === 2">
+      <div class="col-md-6" *ngFor="let lane of schoolSettingsModel.lanes; let i = index">
+        <label class="cp-input-label">
+          <div class="color-palette-item lane-{{ lane.color ? lane.color.toLowerCase() : 'blank' }}"></div>
+          LANE {{i+1}} SCANNING USER
+        </label>
+
+        <p-dropdown [options]="scannerUsersOptions" placeholder="Select Scanner"
+                    [autoWidth]="false" name="scannerUserByLane-{{i}}" [(ngModel)]="lane.userId" [filter]="true" (onChange)="toggleNewScannerUser($event, i, lane.color)" required></p-dropdown>
+
+        <div *ngIf="lane.userId === 0">
+          <label class="cp-input-label">NEW SCANNER NAME</label>
+          <input class="cp-text-input" type="text" [(ngModel)]="newScannerUsers[i].name" name="newScannerName-{{i}}" placeholder="Enter scanner name" #newScannerName="ngModel" pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$" whitespace-validator required />
+
+          <!-- nameInput validation -->
+          <div *ngIf="newScannerName.invalid && (newScannerName.dirty || newScannerName.touched)" class="alert alert-danger">
+            <div *ngIf="newScannerName?.errors.required">User name is required</div>
+            <div *ngIf="newScannerName?.errors.pattern">User name is invalid</div>
+            <div *ngIf="newScannerName?.errors.invalidWhitespace"> You can't use whitespaces as user name!</div>
+          </div>
+
+          <label class="cp-input-label">EMAIL</label>
+          <input class="cp-text-input" type="text" placeholder="Enter scanner email address" [(ngModel)]="newScannerUsers[i].email" name="newScannerEmail-{{i}}" #newScannerEmail="ngModel" (blur)="isNewUserRepeatEmail(i)" [ngModelOptions]="{updateOn: 'blur'}" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}" appIsUserExist required />
+
+          <!-- emailInput validation -->
+          <div *ngIf="newScannerEmail.invalid && (newScannerEmail.dirty || newScannerEmail.touched)"
+               class="alert alert-danger">
+            <div *ngIf="newScannerEmail?.errors.pattern">Email is invalid</div>
+            <div *ngIf="newScannerEmail?.errors.required">Email is required</div>
+            <div *ngIf="newScannerEmail?.errors.isEmailExist">User with email {{ newScannerEmail.model }} already exist</div>
+          </div>
+          <div *ngIf="repeatEmails && repeatEmails.length && repeatEmails[i]" class="alert alert-danger">
+            <div>User(s) with email(s) {{ newScannerEmail.model }} already exist</div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ARCHIVE -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="cp-form__header">
+          <h3 class="cp-form__title">Archive</h3>
+        </div>
+
+        <label class="cp-input-label">TIME FORMAT</label>
+        <p-dropdown [options]="timeFormatOptions" [(ngModel)]="schoolSettingsModel.archiveTimeTypeId" placeholder="Select time format"
+                    [autoWidth]="false" name="timeFormatSelect" required></p-dropdown>
+      </div>
+    </div>
+
+    <!-- DISMISSAL CARD -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="cp-form__header">
+          <h3 class="cp-form__title">Dismissal Card</h3>
+        </div>
+
+        <label class="cp-input-label">PRINT CONFIGURATION</label>
+        <p-dropdown [options]="cardsPrintingOptions" [(ngModel)]="schoolSettingsModel.cardPrintingTypeId" placeholder="Select dismissal card type"
+                    [autoWidth]="false" name="dismissalCardTypeSelect" required></p-dropdown>
+
+       
+        <label class="cp-input-label">
+          <p-checkbox class="cp-primeng-checkbox" name="allowPrinting" [(ngModel)]="schoolSettingsModel.allowPrintingAtHome" binary="true"></p-checkbox>
+          <span>SHOW BARCODE IN PARENT’S VIEW</span>
+        </label>
+      </div>
+
+      <div class="col-md-12">
+        <label class="cp-input-label">INSTRUCTIONS</label>
+        <textarea class="cp-text-input" name="instructions" rows="10" cols="50" placeholder="Custom dismissal instructions" [(ngModel)]="schoolSettingsModel.instructions"></textarea>
+      </div>
+    </div>
+
+    <!-- SAVE -->
+    <div class="row">
+      <div class="col-md-6"></div>
+
+      <div class="col-md-6">
+        <div class="flex-column justify padding-12">
+          <div class="align-end">
+            <!-- || isActiveFlightExist -->
+            <button type="submit" class="flat accent shadow" [disabled]="settingsForm.form.invalid || !checkAllLanesHaveColorsSelected() || repeatEmails?.length || existEmails?.length"
+                    (click)="saveEditSchoolSettings()">
+              SAVE
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Validation -->
+    <div *ngIf="!isLanesNamesUnique" class="alert alert-danger">
+      <div>Lanes names should not match</div>
+    </div>
+
+    <div *ngIf="!isScannerPerLaneUnique" class="alert alert-danger">
+      <div>Scanner user should be bind only for one line</div>
+    </div>
+
+    <div *ngIf="isActiveFlightExist" class="alert alert-danger">
+      <div>Close active lanes first before you can save settings</div>
+    </div>
+
+    <div *ngIf="existEmails?.length" class="alert alert-danger">
+      <div>User(s) with email(s) {{ existEmails.join(', ') }} already exist</div>
+    </div>
+
+
+  </form>
+</div>
+
+<ng-template #template>
+  <div class="cp-modal">
+    <header class="cp-modal__header">
+      <h5 class="cp-modal__title">End school year?</h5>
+    </header>
+    <div class="cp-modal__content">
+      <p class="cp-modal__text">
+        Are you sure you want to end school year?
+        <br> This action will erase all Students, Parents'
+        <br> accounts, archive data and classrooms
+        <br> permanently.
+      </p>
+    </div>
+    <footer class="cp-modal__footer">
+      <button class="flat black" (click)="ModalService.modalRef.hide()">CANCEL</button>
+      <button class="flat accent shadow" (click)="endYear(); ModalService.modalRef.hide()">ACCEPT</button>
+    </footer>
+  </div>
+</ng-template>

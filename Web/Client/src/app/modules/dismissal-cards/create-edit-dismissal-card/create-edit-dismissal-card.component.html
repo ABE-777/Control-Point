@@ -1,0 +1,94 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="page-header__left">
+      <button class="cp-button flat purple icon cp-button--back" (click)="locationBack()">
+        <span class="cp-button__text">BACK</span>
+        <i class="material-icons cp-button__icon">arrow_back</i>
+      </button>
+    </div>
+  </header>
+
+  <form class="cp-form" #cardForm="ngForm" (ngSubmit)="submitModel()">
+    <header class="cp-form__header">
+      <h1 class="cp-form__title">{{ createEditItemService.isEditMode ? 'Edit Dismissal Card' : 'New Dismissal Card'}}</h1>
+    </header>
+
+
+
+    <label class="cp-input-label">FIRST NAME AND LAST NAME</label>
+    <input class="cp-text-input" type="text" name="parentName"
+           #parentName="ngModel" [(ngModel)]="cardModel.parentName"
+           maxlength="50" minlength="3" required pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$"
+           whitespace-validator />
+    <!-- parentName validation -->
+    <div *ngIf="parentName.invalid && (parentName.dirty || parentName.touched)"
+         class="alert alert-danger">
+      <div *ngIf="parentName?.errors.minlength">Parents name should not contain less then 3 symbols!</div>
+      <div *ngIf="parentName?.errors.pattern">Parents name is invalid!</div>
+      <div *ngIf="parentName?.errors.required">Parent name is required</div>
+      <div *ngIf="parentName?.errors.invalidWhitespace">You can't use white-spaces as parents name!</div>
+    </div>    
+    <label class="cp-input-label">DRIVER’S LICENSE</label>
+    <input class="cp-text-input" type="text" name="driversLicense"
+           #driversLicense="ngModel" [(ngModel)]="cardModel.driversLicense" [ngModelOptions]="{updateOn: 'blur'}"
+           maxlength="15" required whitespace-validator/>
+    <!-- driversLicense validation -->
+    <div *ngIf="driversLicense.invalid && (driversLicense.dirty || driversLicense.touched)"
+         class="alert alert-danger">
+      <div *ngIf="driversLicense?.errors.required">Driver's license is required</div>
+      <div *ngIf="driversLicense?.errors.isLicenseExist">User with this driver license already exist!</div>
+      <div *ngIf="driversLicense?.errors.invalidWhitespace">You can't use white-spaces as drivers license!</div>
+    </div>
+
+    <label class="cp-input-label">PHONE NUMBER</label>
+    <input class="cp-text-input" type="text" name="phoneNumber"
+           #phoneNumber="ngModel" [(ngModel)]="cardModel.phoneNumber"
+           maxlength="10" required whitespace-validator/>
+    <!-- phoneNumber validation -->
+    <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)"
+         class="alert alert-danger">
+      <div *ngIf="phoneNumber?.errors.required">Phone number is required</div>
+      <div *ngIf="phoneNumber?.errors.invalidWhitespace">You can't use white-spaces as phone number!</div>
+    </div>
+
+    <!-- Parents for Admins -->
+    <div *ngIf="!createEditItemService.isEditMode && isAdmin">
+      <label class="cp-input-label">PARENT / GUARDIAN</label>
+      <p-dropdown #mainParentInput="ngModel" [autoWidth]="false"
+                  name="mainParentInput" [options]="mainParents" [(ngModel)]="selectedMainParent"
+                  optionLabel="name" [filter]="true" (onChange)="filterStudents($event.value, true)" placeholder="Select Parent" required>
+      </p-dropdown>
+
+
+    </div>
+
+    <label class="cp-input-label">STUDENTS</label>
+    <p-multiSelect class="multiselect-no-header" name="selectedStudents"
+                   [(ngModel)]="cardModel.students" #selectedStudents="ngModel"
+                   [options]="availableStudents" optionLabel="name"
+                   [filter]="false" [showToggleAll]="false" [maxSelectedLabels]="1"
+                   [defaultLabel]="'Select Students'" [selectedItemsLabel]="'{0} Selected'"
+                   required>
+    </p-multiSelect>
+    <!-- phoneNumber validation -->
+    <div *ngIf="selectedStudents.invalid && (selectedStudents.dirty || selectedStudents.touched)"
+         class="alert alert-danger">
+      <div *ngIf="selectedStudents?.errors.required">Select at least one student</div>
+    </div>
+
+    <label class="cp-input-label">RELATIONSHIP <small>(Mother, Father, Grandmother, etc.)</small></label>
+    <input class="cp-text-input" type="text" name="relationship"
+           #relationship="ngModel" [(ngModel)]="cardModel.relationship"
+           maxlength="15" required whitespace-validator/>
+    <!-- relationship validation -->
+    <div *ngIf="relationship.invalid && (relationship.dirty || relationship.touched)"
+         class="alert alert-danger">
+      <div *ngIf="relationship?.errors.required">Relationship is required</div>
+      <div *ngIf="relationship?.errors.invalidWhitespace">You can't use white-spaces as relationship!</div>
+    </div>
+
+    <footer class="cp-form__footer">
+      <button type="submit" class="flat accent shadow" [disabled]="cardForm.invalid || cardForm.pending || cardForm.pristine">{{ createEditItemService.isEditMode ? 'SAVE' : 'CREATE'}}</button>
+    </footer>
+  </form>
+</div>

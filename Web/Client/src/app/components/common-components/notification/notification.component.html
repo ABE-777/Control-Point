@@ -1,0 +1,6 @@
+<div class="cp-notify" [ngClass]="{ 'is-open': ns.isOpen, 'cp-notify--warning': ns.warning }" >
+  <span class="cp-notify__message">{{ ns.message }}</span>
+  <button class="cp-notify__close" (click)="ns.hide()">
+    <i class="material-icons">clear</i>
+  </button>
+</div>

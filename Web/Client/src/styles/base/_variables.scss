@@ -1,0 +1,73 @@
+//  Variables
+//  ------------------------------
+//
+//  Table of Contents:
+//
+//   Colors
+//   Typography
+//   Breakpoints
+//   z-index
+//   Other
+
+// Colors:
+// ---------
+
+$c-purple: #6f33ae;
+$c-purple--accent: #4e258f;
+$c-purple--dark: #211651;
+$c-orange: #ff4612;
+$c-yellow: #ffd91a;
+$c-green: #16b91d;
+$c-red: #ff0000;
+$c-blue: #006fdd;
+$c-pink: #ff1493;
+$c-deep-blue: #401F76;
+$c-grey: #a9a5ad;
+$c-grey--outline: #95989A;
+$c-grey-border: #E8E8E8;
+$c-grey--dark1: #7f7c82;
+$c-grey--dark2: #4e4e52;
+$c-grey--light: #f0edf2;
+$c-white: #fff;
+$c-black: #4e4e52;
+$c-grey--light-bg: #f7f7f7;
+$font-color: #2F313A;
+
+// Typography
+// ------------
+
+$f-main: 'Open Sans', sans-serif;
+$f-second: 'Ubuntu', sans-serif;
+$-text-weight-bold: 700;
+$-text-weight-semi-bold: 500;
+
+// Breakpoints
+// --------------
+
+// Mobile first (use with min-width)
+$bp-xs: 480px;
+$bp-sm: 768px;
+$bp-md: 992px;
+$bp-lg: 1200px;
+$bp-xlg: 1500px;
+// Desktop first (use with max-width)
+$bp-xs--max: $bp-xs - 1px;
+$bp-sm--max: $bp-sm - 1px;
+$bp-md--max: $bp-md - 1px;
+$bp-lg--max: $bp-lg - 1px;
+$bp-xlg--max: $bp-xlg - 1px;
+
+// z-index
+// ----------
+$z-loader: 10;
+$z-menu-wrap: 20;
+$z-menu-header: 30;
+$z-main-header: 40;
+$z-notification: 100;
+
+// Other
+// ----------
+
+$input-box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.03);
+$input-focus-box-shadow: 0px 4px 5px 0px rgba($c-purple, 0.15);
+$input-border-radius: 8px;

@@ -1,0 +1,115 @@
+$menu-height-desktop: 65px;
+$menu-height-mobile: 55px;
+
+html,
+body {
+  min-width: 320px;
+  margin: 0 auto;
+  padding: 0;
+  font-family: $f-main;
+  font-size: 12px;
+  color: $font-color;
+  box-sizing: border-box;
+  background-color: $c-grey--light-bg;
+  height: 100%;
+}
+
+.full-height-page {
+  min-height: calc(100% - #{ $menu-height-mobile });
+  @media (min-width: $bp-sm) {
+    min-height: calc(100% - #{ $menu-height-desktop });
+  }
+
+  &--flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &--center {
+    justify-content: center;
+  }
+}
+
+.page-container {
+  padding: 15px;
+
+  @media (min-width: $bp-md) {
+    padding: 24px;
+  }
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .cp-input-calendar {
+    margin-left: 25px;
+  }
+
+  &__left,
+  &__right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  &__right {
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  &__title {
+    margin-bottom: 0;
+    font-size: 32px;
+    font-weight: $-text-weight-bold;
+
+    &--sm {
+      font-size: 29px;
+    }
+
+    @media (max-width: $bp-md--max) {
+      font-size: 20px;
+
+      &--sm {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.grid-container {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  overflow: visible;
+  /*overflow-x: auto;*/
+  /*overflow-x: visible;*/
+}
+
+// TODO: DEPRECATED, need to create .page-header block instead
+.jumbo-header {
+  font-size: 32px;
+  font-weight: $-text-weight-bold;
+
+  &--sm {
+    font-size: 29px;
+  }
+
+  @media (max-width: $bp-md--max) {
+    font-size: 20px;
+
+    &--sm {
+      font-size: 18px;
+    }
+  }
+}
+
+.sub-header {
+  margin-bottom: 4px;
+}
+// -----------------
+
+

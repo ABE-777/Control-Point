@@ -1,0 +1,66 @@
+<div class="page-container"  [ngClass]="{'full-height-page full-height-page--flex-column': !teachers?.length }">
+  <div class="sub-header">
+    <div class="jumbo-header">Classrooms</div>
+  </div>
+
+  <div *ngIf="teachers?.length" class="center-hold-container">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-4">
+        <h1>Assign</h1>
+      </div>
+      <div class="col-md-6"></div>
+    </div>
+    <div class="row" style="margin-bottom:20px; margin-top:20px; font-weight:bold;">
+      <div class="col-md-2"></div>
+      <div class="col-md-4" style="width:100%;">
+        <label>TEACHER</label>
+      </div>
+      <div class="col-md-4" style="width:100%;">
+        <label>CLASSROOM</label>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+
+    <div class="row" *ngFor="let teacher of teachers; let i=index">
+      <div class="col-md-2"></div>
+      <div class="col-md-4" style="width:100%; margin:0;">
+        <input class="white-bg" type="text" [value]="teacher.teacherName" disabled name="teacherName" style="width:100%;display: block; padding: 12px 18px; height: 48px; border: 1px solid #E8E8E8; border-radius: 8px; font-size: 14px; background-color:transparent" />
+      </div>
+      <div class="col-md-4" style="width:100%;">
+        <p-dropdown [(options)]="classModel[i].filteredClassrooms" optionLabel="name" [(ngModel)]="selectedClass[i]" placeholder="Select classroom" (onChange)="onChangeClassroom($event, i)" (onFocus)="setTempCurrentValue($event, i)" [autoWidth]="false" [filter]="true" name="classroomName" required></p-dropdown>
+      </div>
+      <div class="col-md-2"><span *ngIf="isClassroomAssigned[i]" style="color:red;">{{message}}</span></div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-6">
+
+      </div>
+      <div class="col-md-6">
+        <div class="flex-column justify padding-12">
+          <div class="align-end">
+            <button type="button" class="flat accent shadow" [disabled]="isSaveButton" (click)="saveData()">SAVE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- No items screen -->
+  <div class="no-items-view" *ngIf="!teachers?.length">
+    <p class="no-items-view__text" style="max-width: 325px;">Please upload students' and classroom teachers' information first in order to link classrooms to teachers.</p>
+    <br>
+    <div class="no-items-view__image-container no-items-view__image-container--not-clickable">
+      <img class="no-items-view__image" src="assets/images/TeacherStudent.svg" alt="new teachers">
+    </div>
+    <button class="item flat accent shadow" [routerLink]="['../new-user']" style="margin-bottom:30px;">ADD TEACHERS</button>
+    <button class="item flat accent shadow" [routerLink]="['../edit-student']" style="margin-left:0px;">ADD STUDENTS</button>
+
+  </div>
+
+
+</div>

@@ -1,0 +1,48 @@
+<div class="page-container" [ngClass]="{'full-height-page full-height-page--flex-column': !isSchoolConfigSet || !isHasFlight }" (window:orientationchange)="onOrientationChange($event)">
+  <header class="page-header">
+    <div class="page-header__left">
+      <h3 class="page-header__title">Flights</h3>
+      <app-flight-selector *ngIf="isSchoolConfigSet && flights?.length" [flights]="flights"
+                           [activeFlight]="activeFlight" (changeActiveFlight)="setActiveFlight($event)">
+      </app-flight-selector>
+    </div>
+
+    <div class="page-header__right">
+      <!--<search-bar [data]="[]" [filters]="[]"></search-bar>-->
+      <div class="item" style="width:250px; display:flex;">
+        <p-dropdown [options]="students" optionLabel="name" [(ngModel)]="selectedStudent" placeholder="Search for a student" [autoWidth]="false" [filter]="true" name="studentName" (onChange)="setFilteredFlight($event)"></p-dropdown>
+      </div>
+    </div>
+  </header>
+
+  <app-lane-selector *ngIf="lanes && activeLane" [activeLane]="activeLane" [nextActiveLane]="nextActiveLane" [isLandscape]="isLandscape"
+                     [lanes]="lanes" (changeActiveLane)="setActiveLane($event)"></app-lane-selector>
+
+
+  <app-flight-tables *ngIf="activeLane" [lane]="activeLane" [nextLane]="nextActiveLane" [teacherId]="activeTeacherId" [flightStatus]="activeFlight.status" [highlightedCardId]="highlightedCardId" [isLandscape]="isLandscape" [isCarColumnVisible]="isCarColumnVisible" [isGradeColumnVisible]="isGradeColumnVisible"></app-flight-tables>
+
+
+
+  <!-- No items screen -->
+  <div class="no-items-view" *ngIf="!isSchoolConfigSet">
+    <p class="no-items-view__text" style="max-width: 325px;">Lane information has not been configured yet. {{isAdmin? "Please go to School Configuration view and complete the 'Lane' section." : "Please contact your School Administrator." }} </p>
+    <br>
+    <div class="no-items-view__image-container no-items-view__image-container--not-clickable">
+      <img class="no-items-view__image" src="assets/images/menu_flights.svg" alt="new configurations">
+    </div>
+    <button *ngIf="isAdmin" class="item flat accent shadow" [routerLink]="['../school-configuration']" style="margin-bottom:30px;">GO TO SCHOOL CONFIGURATION</button>
+
+  </div>
+
+
+
+  <!-- No cars have been scanned yet -->
+  <div class="no-items-view" *ngIf="!isHasFlight">
+    <p class="no-items-view__text" style="max-width: 325px;"> {{closedFlightIntoArchive === "" ? "No cars have been scanned yet." : "Flight " + closedFlightIntoArchive +" have been closed. Please go to the archive to view this information."}}</p>
+    <br>
+    <div class="no-items-view__image-container no-items-view__image-container--not-clickable">
+      <img class="no-items-view__image" src="assets/images/menu_flights.svg" alt="new flight">
+    </div>
+  </div>
+
+</div>

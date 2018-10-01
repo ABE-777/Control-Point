@@ -1,0 +1,68 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="page-header__left">
+      <button class="flat purple icon" [routerLink]="['/users-management']">BACK TO USERS
+        <i class="material-icons">arrow_back</i>
+      </button>
+    </div>
+  </header>
+
+  <form class="cp-form" #newUserForm="ngForm" (submit)="submitUser()">
+      <header class="cp-form__header">
+        <h1 class="cp-form__title">{{ createEditItemService.isEditMode ? 'Edit a School User' : 'Create a School User'}}</h1>
+      </header>
+
+      <label class="cp-input-label">NAME</label>
+      <input class="cp-text-input" type="text" placeholder="Enter user name"
+             name="nameInput" [(ngModel)]="userModel.name" #nameInput="ngModel"
+             pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$"
+             minlength="3" whitespace-validator required />
+      <!-- nameInput validation -->
+      <div *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+            class="alert alert-danger">
+        <div *ngIf="nameInput?.errors.minlength">User name should not contain less then 3 symbols!</div>
+        <div *ngIf="nameInput?.errors.required">User name is required</div>
+        <div *ngIf="nameInput?.errors.pattern">User name is invalid</div>
+        <div *ngIf="nameInput?.errors.invalidWhitespace"> You can't use whitespaces as user name!</div>
+      </div>
+
+      <label class="cp-input-label">EMAIL</label>
+      <input class="cp-text-input" type="text" placeholder="Enter user email address"
+             [(ngModel)]="userModel.email" name="emailInput" #emailInput="ngModel" [ngModelOptions]="{updateOn: 'blur'}"
+             pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}" appIsUserExist
+             [disabled]="createEditItemService.isEditMode" required />
+      <!-- emailInput validation -->
+      <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)"
+            class="alert alert-danger">
+        <div *ngIf="emailInput?.errors.pattern">Email is invalid</div>
+        <div *ngIf="emailInput?.errors.required">Email is required</div>
+        <div *ngIf="emailInput?.errors.isEmailExist">User with email {{ emailInput.model }} already exist</div>
+      </div>
+
+      <label class="cp-input-label">ROLE</label>
+      <p-dropdown [options]="rolesOptions" placeholder="Select role" [autoWidth]="false" name="roleInput"
+                  [(ngModel)]="userModel.roleId" #roleInput="ngModel" required></p-dropdown>
+      <!-- stateInput validation -->
+      <div *ngIf="roleInput.invalid && (roleInput.dirty || roleInput.touched)"
+            class="alert alert-danger">
+        <div *ngIf="roleInput?.errors.required">State is required</div>
+      </div>
+      
+      <div *ngIf="userModel.roleId === 4 && userModel !== null">
+        <label class="cp-input-label">CLASSROOM</label>
+        <p-dropdown #classroomInput="ngModel" placeholder="Select classroom" [autoWidth]="false" name="classroomInput"
+                    [options]="classrooms" [(ngModel)]="selectedClassroom" optionLabel="name" [filter]="true"></p-dropdown>
+        <!-- classroom input validation -->
+        <div *ngIf="classroomInput.invalid && (classroomInput.dirty || classroomInput.touched)"
+             class="alert alert-danger">
+          <div *ngIf="classroomInput.errors.required">Classroom is required</div>
+        </div>
+      </div>
+           
+
+      <footer class="cp-form__footer">
+        <button type="submit" class="flat accent shadow" [disabled]="newUserForm.form.invalid || newUserForm.form.pending || userModel.roleId === 0">{{ createEditItemService.isEditMode ? 'SAVE' : 'CREATE'}}</button>
+      </footer>
+  </form>
+</div>
+

@@ -1,0 +1,9 @@
+D:\Projects\control-point\control-point\WebCreek.Framework\bin\Release\netcoreapp2.0\WebCreek.Framework.deps.json
+D:\Projects\control-point\control-point\WebCreek.Framework\bin\Release\netcoreapp2.0\WebCreek.Framework.dll
+D:\Projects\control-point\control-point\WebCreek.Framework\bin\Release\netcoreapp2.0\WebCreek.Framework.pdb
+D:\Projects\control-point\control-point\WebCreek.Framework\obj\Release\netcoreapp2.0\WebCreek.Framework.csprojResolveAssemblyReference.cache
+D:\Projects\control-point\control-point\WebCreek.Framework\obj\Release\netcoreapp2.0\WebCreek.Framework.csproj.CoreCompileInputs.cache
+D:\Projects\control-point\control-point\WebCreek.Framework\obj\Release\netcoreapp2.0\WebCreek.Framework.AssemblyInfoInputs.cache
+D:\Projects\control-point\control-point\WebCreek.Framework\obj\Release\netcoreapp2.0\WebCreek.Framework.AssemblyInfo.cs
+D:\Projects\control-point\control-point\WebCreek.Framework\obj\Release\netcoreapp2.0\WebCreek.Framework.dll
+D:\Projects\control-point\control-point\WebCreek.Framework\obj\Release\netcoreapp2.0\WebCreek.Framework.pdb

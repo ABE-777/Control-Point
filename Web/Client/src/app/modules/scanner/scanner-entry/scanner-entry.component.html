@@ -1,0 +1,24 @@
+<div class="scanner-view full-height-page" [ngClass]="{'scan-successfully': scannerService.scanSuccessfully, 'scan-not-successfully': scannerService.scanNotSuccessfully}">
+  <div class="scanner-view__inner">
+    <div class="scanner-view__content">
+      <div class="scanner-view__icon">
+        <img src="assets/images/scanner.svg" alt="Scanner Icon" *ngIf="!scannerService.isInScanMode">
+        <img class="image-offset" src="assets/images/scan.gif" alt="Scanner animated Icon" *ngIf="scannerService.isInScanMode">
+      </div>
+    </div>
+
+    <div class="scanner-view__text" *ngIf="scannerService.scanningMode === 'multiple' && scannerService.assignedLanes.length">
+      <span style="font-weight:600;">Assigned lane: </span>
+      <div class="scanner-view__assigned-lane">
+        <div class="color-palette-item color-palette-item--{{ scannerService.assignedLanes[0].color.toLowerCase() }}"></div>
+        {{ scannerService.assignedLanes[0].name }}
+      </div>
+    </div>
+
+    <label class="flat accent scanner-view__scan-toggle" for="scan-text" *ngIf="!scannerService.isInScanMode && scannerService.assignedLanes.length">START SCANNING</label>
+
+    <div class="scanner-view__text scanner-view__text--no-lane" style="font-weight:600;" *ngIf="!scannerService.assignedLanes.length">
+        You are currently not assigned to a lane. Please contact the School Administrator.
+    </div>
+  </div>
+</div>

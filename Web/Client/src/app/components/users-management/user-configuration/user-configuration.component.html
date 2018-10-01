@@ -1,0 +1,119 @@
+<div class="padding-24">
+
+  <div>
+    <button class="flat purple icon" (click)="goBack()">BACK<i class="material-icons">arrow_back</i></button>
+  </div>
+
+
+  <div class="form-container w-48-perc">
+    <form #userConfigurationForm="ngForm" (submit)="submitUserConfiguration()">
+      <h1>User Configuration</h1>
+      <div class="label-input-container">
+        <label>NAME</label>
+        <input #nameInput="ngModel" type="text" [(ngModel)]="userConfiguration.userName"
+               name="nameInput" pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$"
+               minlength="3" whitespace-validator required />
+        <div *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+             class="alert alert-danger">
+          <div *ngIf="nameInput.errors.invalidWhitespace">You can't use white-spaces as user name!</div>
+          <div *ngIf="nameInput.errors.minlength">User name should not contain less then 3 symbols!</div>
+          <div *ngIf="nameInput.errors.required">User name is required!</div>
+          <div *ngIf="nameInput.errors.pattern">User name is incorrect!</div>
+        </div>
+
+
+        <label class="flex">EMAIL</label>
+        <label class="flex">{{userConfiguration.email}}</label>
+
+
+        <label>CURRENT PASSWORD</label>
+        <div class="show-password">
+          <input id="uc_currentPasswordInput" #currentPasswordInput="ngModel" type="password"
+                 [(ngModel)]="userConfiguration.password"
+                 [required]="isCurrentPasswordRequired" name="currentPasswordInput"
+                 (ngModelChange)="passwordChange($event)"
+                 pattern="^\S*$" />
+          <button class="show-password__button" type="button" (click)="triggerCurrentPasswordVisibility()">
+            <i class="fa fa-eye" *ngIf="!currentPasswordVisible" aria-hidden="true"></i>
+            <i class="fa fa-eye-slash" *ngIf="currentPasswordVisible" aria-hidden="true"></i>
+          </button>
+        </div>
+        <!-- Current Password validation -->
+        <div *ngIf="currentPasswordInput.invalid && (currentPasswordInput.dirty
+             || currentPasswordInput.touched || newPasswordInput.touched || confirmPasswordInput.touched)"
+             class="alert alert-danger">
+          <div *ngIf="currentPasswordInput.errors.pattern">Your password should contain only letters, numbers and symbols!</div>
+          <div *ngIf="currentPasswordInput.errors.required">Current password is required!</div>
+        </div>
+
+
+        <label>NEW PASSWORD</label>
+        <div class="show-password">
+          <input id="uc_newPasswordInput" #newPasswordInput="ngModel" type="password"
+                 [(ngModel)]="userConfiguration.newPassword" name="newPasswordInput"
+                 (ngModelChange)="passwordChange($event)"
+                 [required]="isNewPasswordRequired"
+                 pattern="^\S*$" />
+          <button class="show-password__button" type="button" (click)="triggerNewPasswordVisibility()">
+            <i class="fa fa-eye" *ngIf="!newPasswordVisible" aria-hidden="true"></i>
+            <i class="fa fa-eye-slash" *ngIf="newPasswordVisible" aria-hidden="true"></i>
+          </button>
+        </div>
+        <!-- New Password validation -->
+        <div *ngIf="newPasswordInput.invalid && (newPasswordInput.dirty
+             || newPasswordInput.touched || currentPasswordInput.touched || confirmPasswordInput.touched)"
+             class="alert alert-danger">
+          <div *ngIf="newPasswordInput.errors.pattern">Your password should contain only letters, numbers and symbols!</div>
+          <div *ngIf="newPasswordInput.errors.required">New password is required!</div>
+        </div>        
+
+        <label>CONFIRM NEW PASSWORD</label>
+        <div class="show-password">
+          <input id="uc_confirmPasswordInput" #confirmPasswordInput="ngModel" type="password"
+                 [(ngModel)]="userConfiguration.newPasswordConfirmation" name="confirmPasswordInput"
+                 (ngModelChange)="passwordChange($event)"
+                 [required]="isConfirmPasswordRequired"
+                 pattern="^\S*$" />
+          <button class="show-password__button" type="button" (click)="triggerConfirmPasswordVisibility()">
+            <i class="fa fa-eye" *ngIf="!confirmPasswordVisible" aria-hidden="true"></i>
+            <i class="fa fa-eye-slash" *ngIf="confirmPasswordVisible" aria-hidden="true"></i>
+          </button>
+        </div>
+        <!-- Confirm Password validation -->
+        <div *ngIf="confirmPasswordInput.invalid && (confirmPasswordInput.dirty
+             || confirmPasswordInput.touched || currentPasswordInput.touched || newPasswordInput.touched)"
+             class="alert alert-danger">
+          <div *ngIf="confirmPasswordInput.errors.pattern">Your password should contain only letters, numbers and symbols!</div>
+          <div *ngIf="confirmPasswordInput.errors.required">Please confirm new password!</div>
+        </div>
+        <div *ngIf="confirmPasswordInput.value !== newPasswordInput.value && (confirmPasswordInput.touched)"
+             class="alert alert-danger">
+          <div>Password does not match the confirm password!</div>
+        </div>
+
+      </div>
+
+    </form>
+
+    <div class="flex-column padding-12">
+      <div class="align-end">
+        <button *ngIf="(!currentPasswordInput.value && !newPasswordInput.value && !confirmPasswordInput.value)" type="button" class="flat accent shadow"
+                [disabled]="!nameInput.value || nameInput.value === userName"
+                (click)="submitUserConfiguration()">
+          SAVE
+        </button>
+      </div>
+      <div *ngIf="currentPasswordInput.value || newPasswordInput.value || confirmPasswordInput.value" class="align-end">
+        <button type="button" class="flat accent shadow"
+                [disabled]="userConfigurationForm.invalid || userConfigurationForm.pending || !currentPasswordInput.value || !newPasswordInput.value
+                            || confirmPasswordInput.value !== newPasswordInput.value"
+                (click)="submitUserConfiguration()">
+          SAVE
+        </button>
+      </div>
+
+    </div>
+
+
+  </div>
+</div>

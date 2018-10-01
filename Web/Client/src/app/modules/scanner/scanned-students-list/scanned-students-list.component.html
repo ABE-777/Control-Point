@@ -1,0 +1,136 @@
+<div class="page-container">
+  <!-- HEADER -->
+  <div class="scanner-header">
+    <div class="scanner-header__left">
+      <label class="scanner-status" for="scan-text">
+        <span *ngIf="scannerService.isInScanMode;then scannerActive else scannerNotActive"></span>
+
+        <ng-template #scannerActive>
+          <span class="scanner-status__inner">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-18470 -5791 20 20.1">
+              <g transform="translate(-18522.9 -5869)">
+                <path d="M41.9,4A9.6,9.6,0,0,1,49,1a9.228,9.228,0,0,1,7,3,9.506,9.506,0,0,1,2.9,7.1A9.9,9.9,0,0,1,56,18.2a9.506,9.506,0,0,1-7.1,2.9,9.9,9.9,0,0,1-7.1-2.9,9.506,9.506,0,0,1-2.9-7.1A10.236,10.236,0,0,1,41.9,4Zm1.4,12.7a7.73,7.73,0,0,0,5.6,2.4,7.568,7.568,0,0,0,5.6-2.4,7.73,7.73,0,0,0,2.4-5.6,7.413,7.413,0,0,0-2.4-5.6A7.109,7.109,0,0,0,49,3a7.568,7.568,0,0,0-5.6,2.4A7.73,7.73,0,0,0,41,11,7.329,7.329,0,0,0,43.3,16.7Z"
+                  transform="translate(14 77)" />
+                <path d="M264.464,879.075l4.475-4.475.591.591-5.066,5.066-2.364-2.364.591-.591Z" transform="translate(-202.915 -789.129)"
+                />
+              </g>
+            </svg>
+            <span>Scanner is ready!</span>
+          </span>
+        </ng-template>
+
+        <ng-template #scannerNotActive>
+          <span class="scanner-status__inner is-not-active bounce">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-18855 -5791 20 20.1">
+              <path d="M41.9,4A9.6,9.6,0,0,1,49,1a9.228,9.228,0,0,1,7,3,9.506,9.506,0,0,1,2.9,7.1A9.9,9.9,0,0,1,56,18.2a9.506,9.506,0,0,1-7.1,2.9,9.9,9.9,0,0,1-7.1-2.9,9.506,9.506,0,0,1-2.9-7.1A10.236,10.236,0,0,1,41.9,4Zm1.4,12.7a7.73,7.73,0,0,0,5.6,2.4,7.568,7.568,0,0,0,5.6-2.4,7.73,7.73,0,0,0,2.4-5.6,7.413,7.413,0,0,0-2.4-5.6A7.109,7.109,0,0,0,49,3a7.568,7.568,0,0,0-5.6,2.4A7.73,7.73,0,0,0,41,11,7.329,7.329,0,0,0,43.3,16.7ZM48,6h2v6H48Zm0,8h2v2H48Z"
+                transform="translate(-18893.9 -5792)" />
+            </svg>
+            <span>Activate scanner</span>
+          </span>
+        </ng-template>
+      </label>
+    </div>
+
+    <div class="scanner-header__right">
+      <button type="submit" class="cp-button cp-button--style-2" (click)="modalService.openModal(scannerService.scanningMode === 'single' ? chooseLaneToCloseModal : closeLaneModal)">
+        CLOSE LANE
+      </button>
+    </div>
+  </div>
+
+  <!-- CHOOSE SCANNING TYPE DROPDOWN -->
+  <p-dropdown *ngIf="scannerService.scanningMode === 'single'" [(ngModel)]="scannerService.scanningTypeId" [options]="assignedLanesOptions"
+    [autoWidth]="false" (onChange)="changeScanningType($event)"></p-dropdown>
+
+  <!-- CARDS LIST -->
+  <div class="scanned-cards-list">
+    <div class="scanned-cards-list__item" *ngFor="let card of formatedCards; let i = index">
+      <!-- Student Card -->
+      <div class="scanned-card" *ngIf="card.parentId">
+        <div class="scanned-card__header lane-{{ card.lane.color.toLowerCase() }}">
+          <div class="scanned-card__header-left">FLIGHT {{ card.flightNumber }} · {{ card.lane.name }}</div>
+          <div class="scanned-card__header-right">Driver: {{ card.parentName }}</div>
+        </div>
+
+        <div class="scanned-card__student" *ngFor="let student of card.students">
+          <div class="scanned-card__student-name">{{ student.name }}</div>
+          <button *ngIf="card.students.length > 1 && card.isEditable" class="scanned-card__delete-student" (click)="removeScannedStudents({cardId: student.cardId})">
+            <i class="material-icons">clear</i>
+          </button>
+        </div>
+
+        <div class="scanned-card__footer" *ngIf="card.isEditable">
+          <button type="button" class="scanned-card__footer-button" (click)="removeScannedStudents({cardIndex: i})">
+            <i class="material-icons">delete</i>Remove
+          </button>
+
+          <div class="btn-group" *ngIf="scannerService.scanningMode === 'single' && scannerService.assignedLanes.length > 2">
+            <button type="button" class="scanned-card__footer-button" data-toggle="dropdown" data-offset="0%, -100%" data-flip="false"
+                    aria-haspopup="true" aria-expanded="false">
+              <i class="material-icons">compare_arrows</i>Move lane
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <button *ngFor="let lane of getLanesToMove(card.lane.id)" class="dropdown-item" type="button" (click)="moveStudentsToLane(i, lane.id)">{{ lane.name }}</button>
+            </div>
+          </div>
+
+          <div class="btn-group" *ngIf="scannerService.scanningMode === 'single' && scannerService.assignedLanes.length == 2">
+            <button *ngFor="let lane of getLanesToMove(card.lane.id)" class="scanned-card__footer-button" type="button" data-offset="0%, -100%" data-flip="false" (click)="moveStudentsToLane(i, lane.id)">
+            <i class="material-icons">compare_arrows</i>Move lane
+            </button>
+          </div>
+
+        </div>
+      </div>
+      <!-- Message -->
+      <div class="scanner-notification zoomIn" *ngIf="card.message">
+        <svg class="scanner-notification__icon" xmlns="http://www.w3.org/2000/svg" viewBox="-16806.1 -4110 20 20.1">
+          <path d="M41.9,4A9.6,9.6,0,0,1,49,1a9.228,9.228,0,0,1,7,3,9.506,9.506,0,0,1,2.9,7.1A9.9,9.9,0,0,1,56,18.2a9.506,9.506,0,0,1-7.1,2.9,9.9,9.9,0,0,1-7.1-2.9,9.506,9.506,0,0,1-2.9-7.1A10.236,10.236,0,0,1,41.9,4Zm1.4,12.7a7.73,7.73,0,0,0,5.6,2.4,7.568,7.568,0,0,0,5.6-2.4,7.73,7.73,0,0,0,2.4-5.6,7.413,7.413,0,0,0-2.4-5.6A7.109,7.109,0,0,0,49,3a7.568,7.568,0,0,0-5.6,2.4A7.73,7.73,0,0,0,41,11,7.329,7.329,0,0,0,43.3,16.7ZM48,6h2v6H48Zm0,8h2v2H48Z"
+            transform="translate(-16845 -4111)" />
+        </svg>
+        <span>{{ card.message }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Choose lane to close -->
+<ng-template #chooseLaneToCloseModal>
+  <form class="cp-modal" #closeLaneForm="ngForm">
+    <header class="cp-modal__header">
+      <h5 class="cp-modal__title">Close Lane</h5>
+    </header>
+
+    <div class="cp-modal__content">
+      <p class="cp-modal__text">Which lane so you wish to close?</p>
+      <div *ngFor="let lane of scannerService.assignedLanes" class="lane-switch-item">
+        <input id="closeLane-{{lane.id}}" name="closeLane" type="radio" [value]="lane.id" [(ngModel)]="laneToCloseId" required>
+        <label for="closeLane-{{lane.id}}">
+          <span class="color-palette-item lane-{{ lane.color ? lane.color.toLowerCase() : 'blank' }}"></span>
+          {{lane.name}}
+        </label>
+      </div>
+    </div>
+    <footer class="cp-modal__footer">
+      <button class="flat black" (click)="modalService.modalRef.hide()">CANCEL</button>
+      <button class="flat accent shadow" [disabled]="!laneToCloseId" (click)="closeLane(laneToCloseId); modalService.modalRef.hide()">ACCEPT</button>
+    </footer>
+  </form>
+</ng-template>
+
+<!-- MODAL: Close lane confirmation -->
+<ng-template #closeLaneModal>
+  <form class="cp-modal">
+    <header class="cp-modal__header">
+      <h5 class="cp-modal__title">Close Lane</h5>
+    </header>
+
+    <div class="cp-modal__content">
+      <p class="cp-modal__text">Are you sure you want to close the Lane?</p>
+    </div>
+    <footer class="cp-modal__footer">
+      <button class="flat black" (click)="modalService.modalRef.hide()">CANCEL</button>
+      <button class="flat accent shadow"  (click)="closeLane(laneToCloseId); modalService.modalRef.hide()">ACCEPT</button>
+    </footer>
+  </form>
+</ng-template>

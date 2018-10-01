@@ -1,0 +1,5 @@
+<div *ngIf="itemsTotal > 0" class="pager-container">
+  <div class="pager-info-text">
+    <span>Showing </span><span class="bold">{{rowsPerPage*selectedPage+1}} - {{itemsTotal / rowsPerPage < 1 ? itemsTotal : (selectedPage + 1) * rowsPerPage > itemsTotal ? selectedPage * rowsPerPage + itemsTotal - selectedPage * rowsPerPage : (selectedPage + 1) * rowsPerPage}}</span><span> of </span><span class="bold">{{itemsTotal}}</span>
+  </div>
+</div>

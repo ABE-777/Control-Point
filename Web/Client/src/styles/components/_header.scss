@@ -1,0 +1,92 @@
+@import '../base/_variables.scss';
+
+.main-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  background-color: $c-purple--dark;
+  box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.5);
+  z-index: $z-main-header;
+
+  &__inner-wrap {
+    display: flex;
+    align-items: center;
+    min-width: 33.33%;
+
+    &--middle {
+      justify-content: center;
+    }
+
+    &--right {
+      justify-content: flex-end;
+    }
+  }
+
+  &__main-menu {
+  }
+
+  &__logo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 35px;
+    overflow: hidden;
+    z-index: $z-menu-header;
+
+    @media ( min-width: $bp-sm ) {
+      max-width: 100%;
+    }
+  }
+
+  &__user-info {
+    display: flex;
+    align-items: center;
+  }
+
+  &__user-data {
+    color: $c-white;
+  }
+
+  &__user-pic {
+    width: 45px;
+    height: 45px;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    @media ( min-width: $bp-sm ) {
+      margin-right: 15px;
+      margin-left: 15px;
+    }
+  }
+
+  &__user-title {
+    display: block;
+    text-align: right;
+  }
+
+  &__user-subtitle {
+    display: block;
+    text-align: right;
+  }
+
+  &__school-title {
+    display: block;
+    font-size: 16px;
+    color: $c-white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  @media ( min-width: $bp-sm ) {
+    padding: 10px;
+  }
+}

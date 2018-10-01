@@ -1,0 +1,141 @@
+<div class="row">
+  <p-table [value]="students" [ngClass]="!_nextLane?'col-12': (isLandscape?'col-6':'col-12')" styleClass="cp-prime-table cp-prime-table--{{_lane.color.toLowerCase()}}">
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="isGradeColumnVisible" style="width: 60px; text-align: center">GRADE</th>
+        <th>NAME</th>
+        <th *ngIf="isCarColumnVisible" style="width: 20%">CAR</th>
+        <th style="width: 20%">CLASSROOM</th>
+        <th style="width: 20%">HALLWAY</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-student let-rowIndex="rowIndex">
+      <tr [ngClass]="{'highlighted': student.cardId === highlightedCardId}">
+        <td *ngIf="isGradeColumnVisible" style="text-align: center">{{student.grade}}</td>
+        <td>{{student.studentName}}</td>
+        <td *ngIf="isCarColumnVisible">{{student.car}}</td>
+        <td>
+          <!-- Classroom status -->
+          <div *ngIf="authService.matchRoles(roles.schoolAdmin, roles.classroomTeacher); else noClassroomControl">
+            <div  *ngIf="authService.matchRoles(roles.schoolAdmin) || teacherId===student.teacherId" class="cp-switch">
+              <input class="cp-switch__checkbox" type="checkbox" [(ngModel)]="student.classroom"
+                     name="classroom-{{rowIndex}}" id="classroom-{{rowIndex}}"
+                     (change)="setClassroomCardStatus(student.cardId, student.classroom, student)" [disabled]="student.hallway">
+              <label class="cp-switch__control" for="classroom-{{rowIndex}}">
+                <span class="cp-switch__toggle"><i class="material-icons">done</i></span>
+              </label>
+            </div>
+            <div *ngIf="!authService.matchRoles(roles.schoolAdmin) && teacherId !== student.teacherId" class="cp-icon-cell">
+              <div *ngIf="student.classroom"><i class="material-icons">done</i></div>
+              <div *ngIf="!student.classroom"><i class="material-icons">remove</i></div>
+            </div>
+          </div>
+
+          <ng-template #noClassroomControl>
+            <div class="cp-icon-cell">
+              <div *ngIf="student.classroom"><i class="material-icons">done</i></div>
+              <div *ngIf="!student.classroom"><i class="material-icons">remove</i></div>
+            </div>
+          </ng-template>
+        </td>
+        <td>
+          <!-- Hallway status -->
+          <div *ngIf="authService.matchRoles(roles.schoolAdmin, roles.dismissalTeacher); else noHallwayControl">
+            <div class="cp-switch">
+              <input class="cp-switch__checkbox" type="checkbox" [(ngModel)]="student.hallway"
+                     name="hallway-{{rowIndex}}" id="hallway-{{rowIndex}}"
+                     (change)="setHallwayCardStatus(student.cardId, student.hallway)" [disabled]="!student.classroom">
+              <label class="cp-switch__control" for="hallway-{{rowIndex}}">
+                <span class="cp-switch__toggle"><i class="material-icons">done</i></span>
+              </label>
+            </div>
+          </div>
+
+          <ng-template #noHallwayControl>
+            <div class="cp-icon-cell">
+              <div *ngIf="student.hallway"><i class="material-icons">done</i></div>
+              <div *ngIf="!student.hallway"><i class="material-icons">remove</i></div>
+            </div>
+          </ng-template>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!--
+  table for next activeLane  
+  -->
+
+  <p-table *ngIf="_nextLane && isLandscape" [value]="nextStudents" class="col-6" styleClass="cp-prime-table cp-prime-table--{{_nextLane?.color.toLowerCase()}}">
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngIf="isGradeColumnVisible" style="width: 60px; text-align: center">GRADE</th>
+        <th>NAME</th>
+        <th *ngIf="isCarColumnVisible" style="width: 20%">CAR</th>
+        <th style="width: 20%">CLASSROOM</th>
+        <th style="width: 20%">HALLWAY</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-student let-rowIndex="rowIndex">
+      <tr [ngClass]="{'highlighted': student.cardId === highlightedCardId}">
+        <td *ngIf="isGradeColumnVisible" style="text-align: center">{{student.grade}}</td>
+        <td>{{student.studentName}}</td>
+        <td *ngIf="isCarColumnVisible">{{student.car}}</td>
+        <td>
+          <!-- Classroom status -->
+          <div *ngIf="authService.matchRoles(roles.schoolAdmin, roles.classroomTeacher); else noClassroomControlNext">
+            <div *ngIf="authService.matchRoles(roles.schoolAdmin) || teacherId===student.teacherId" class="cp-switch">
+              <input class="cp-switch__checkbox" type="checkbox" [(ngModel)]="student.classroom"
+                     name="classroomNext-{{rowIndex}}" id="classroomNext-{{rowIndex}}"
+                     (change)="setClassroomCardStatus(student.cardId, student.classroom, student)" [disabled]="student.hallway">
+              <label class="cp-switch__control" for="classroomNext-{{rowIndex}}">
+                <span class="cp-switch__toggle"><i class="material-icons">done</i></span>
+              </label>
+            </div>
+            <div *ngIf="!authService.matchRoles(roles.schoolAdmin) && teacherId !== student.teacherId" class="cp-icon-cell">
+              <div *ngIf="student.classroom"><i class="material-icons">done</i></div>
+              <div *ngIf="!student.classroom"><i class="material-icons">remove</i></div>
+            </div>
+          </div>
+
+          <ng-template #noClassroomControlNext>
+            <div class="cp-icon-cell">
+              <div *ngIf="student.classroom"><i class="material-icons">done</i></div>
+              <div *ngIf="!student.classroom"><i class="material-icons">remove</i></div>
+            </div>
+          </ng-template>
+        </td>
+        <td>
+          <!-- Hallway status -->
+          <div *ngIf="authService.matchRoles(roles.schoolAdmin, roles.dismissalTeacher); else noHallwayControlNext">
+            <div class="cp-switch">
+              <input class="cp-switch__checkbox" type="checkbox" [(ngModel)]="student.hallway"
+                     name="hallwayNext-{{rowIndex}}" id="hallwayNext-{{rowIndex}}"
+                     (change)="setHallwayCardStatus(student.cardId, student.hallway)" [disabled]="!student.classroom">
+              <label class="cp-switch__control" for="hallwayNext-{{rowIndex}}">
+                <span class="cp-switch__toggle"><i class="material-icons">done</i></span>
+              </label>
+            </div>
+          </div>
+
+          <ng-template #noHallwayControlNext>
+            <div class="cp-icon-cell">
+              <div *ngIf="student.hallway"><i class="material-icons">done</i></div>
+              <div *ngIf="!student.hallway"><i class="material-icons">remove</i></div>
+            </div>
+          </ng-template>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</div>
+
+
+<!-- Scanning screen -->
+<div class="no-items-view" *ngIf="_flightStatus==='Open'">
+  <div class="no-items-view__image-container--not-clickable" style="width:135px;">
+    <img class="no-items-view__image" src="assets/images/lanes_loading.gif" alt="new loading">
+  </div>
+</div>
+

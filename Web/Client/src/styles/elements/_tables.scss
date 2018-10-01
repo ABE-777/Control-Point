@@ -1,0 +1,293 @@
+@mixin cp-table-color($color) {
+  &:before {
+    background-color: $color;
+  }
+
+  &.ui-table .ui-table-thead > tr > th,
+  &.ui-table .ui-table-tfoot > tr > td {
+    background-color: $color;
+    color: white;
+  }
+
+  .cp-switch__control {
+    background-color: $color;
+  }
+
+  .cp-switch__toggle {
+    color: $color;
+  }
+
+}
+
+.cp-data-grid {
+  .dx-datagrid-rowsview {
+    overflow: visible;
+  }
+  .dx-datagrid {
+    // min-width: 800px;
+  }
+
+  &__link {
+    color: $c-purple--accent;
+
+    &:hover {
+      color: $c-purple--accent;
+    }
+  }
+
+  .dx-datagrid-rowsview {
+    margin-bottom: 45px;
+  }
+}
+
+
+// Accounts
+
+
+.schoolsAccounts{
+
+  table{
+    table-layout: fixed !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+
+  .dx-datagrid-headers tr{
+
+    td:nth-child(1){
+      width: 4%;
+    }
+    
+    td:nth-child(2){
+      width: 20%;
+    }
+
+    td:nth-child(3){
+      width:30%;
+    }
+
+    td:nth-child(4){
+      width: 13%;
+    }
+
+    td:nth-child(5){
+      width: 20%;
+    }
+
+    
+    td:nth-child(6){
+      width: 9%;
+    }
+
+    td:nth-child(7){
+      width: 4%;
+
+      ::after{
+        content: ".";
+        color: transparent;
+      }
+    }
+
+  }
+
+  .dx-datagrid-content tr{
+
+    td:nth-child(1){
+      width: 4%;
+    }
+    
+    td:nth-child(2){
+      width: 20%;
+    }
+
+    td:nth-child(3){
+      width:30%;
+    }
+
+    td:nth-child(4){
+      width: 13%;
+    }
+
+    td:nth-child(5){
+      width: 20%;
+    }
+
+    
+    td:nth-child(6){
+      width: 9%;
+    }
+
+    td:nth-child(7){
+      width: 4%;
+    }
+
+  }
+
+  @media (max-width: $bp-lg){
+
+    table{
+      table-layout: fixed;
+    }
+
+  }
+
+  @media (max-width: $bp-md){
+
+    table{
+      table-layout: fixed;
+
+      td:nth-child(7){
+        padding: 8px 3px !important;
+      }
+    }
+
+  }
+
+  @media (max-width: $bp-xs){
+
+    table{
+
+      td:nth-child(1), td:nth-child(3){
+        display: none !important;
+      }
+
+      td:nth-child(2) {
+        width: 30% !important;
+      }
+
+      td:nth-child(4) {
+        width: 26% !important;
+      }
+
+      td:nth-child(5) {
+        width: 23% !important;
+      }
+
+      td:nth-child(6) {
+        width: 11% !important;
+      }
+
+      td:nth-child(7) {
+        width: 10% !important;
+    }
+
+    }
+
+  }
+
+}
+
+
+
+
+
+.status-field {
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 15px;
+    border-radius: 50%;
+  }
+  &.success {
+      &:before {
+        background-color: $c-green;
+      }
+  }
+  &.warning {
+    &:before {
+      background-color: $c-yellow;
+    }
+  }
+  &.danger {
+    &:before {
+      background-color: $c-red;
+    }
+  }
+  &.disabled {
+    &:before {
+      background-color: $c-grey;
+    }
+  }
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cp-prime-table {
+  position: relative;
+  margin-top: 25px;
+  border-radius: 8px;
+  box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.17);
+  overflow: hidden;
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 6px;
+  }
+
+  &.ui-table .ui-table-thead > tr > th,
+  &.ui-table .ui-table-tbody > tr > td,
+  &.ui-table .ui-table-tfoot > tr > td {
+    height: 48px;
+    border: 0;
+  }
+
+  &.ui-table .ui-table-tbody > tr.highlighted {
+    background-color: #F0F8FF !important;
+  }
+
+  &.ui-table .ui-table-tbody > tr > td {
+    border-top: 1px solid #E2E2E2;
+  }
+
+  &.ui-table .ui-table-tbody > tr:nth-child(even) {
+    background-color: #ffffff;
+  }
+
+  &--yellow {
+    @include cp-table-color($c-yellow);
+  }
+
+  &--green {
+    @include cp-table-color($c-green);
+  }
+
+  &--purple {
+    @include cp-table-color($c-purple);
+  }
+
+  &--orange {
+    @include cp-table-color($c-orange);
+  }
+
+  &--blue {
+    @include cp-table-color($c-blue);
+  }
+
+  &--red {
+    @include cp-table-color($c-red);
+  }
+
+  &--pink {
+    @include cp-table-color($c-pink);
+  }
+
+  &--black {
+    @include cp-table-color($c-black);
+  }
+}
+
+.cp-icon-cell {
+  color: $c-grey;
+}

@@ -1,0 +1,87 @@
+<div style="display:flex;">
+  <div class="login" (window:resize)="fixLeftSideWidth()">
+    <!-- Left Side -->
+    <div #leftSide class="login__left">
+      <img class="login__logo" [src]="'../../../assets/images/control-point-logo--white-letters.png'" alt="logo" (load)="fixLeftSideWidth()" />
+      <img #leftSidePic class="login__pic" src="../../../assets/images/control_point_login_2.png" alt="login image" />
+    </div>
+    <!-- Right Side -->
+    <div class="login__right">
+      <button *ngIf="activeRoute === '/forgot-password'" class="flat purple icon login__back-btn" [routerLink]="['/login']">
+        <span>BACK TO SIGN IN</span>
+        <i class="material-icons">arrow_back</i>
+      </button>
+
+      <!-- Login Form -->
+      <form *ngIf="activeRoute.includes('/login')" class="cp-form login__form" #loginForm="ngForm" (submit)="login()">
+        <header class="cp-form__header">
+          <img class="login__logo-mobile" src="../../../assets/images/control-point-logo--white-letters.png" alt="logo" />
+          <h1 class="cp-form__title">Sign in to Control Point</h1>
+        </header>
+
+        <label class="cp-input-label">EMAIL ADDRESS</label>
+        <input class="cp-text-input login__text-input" type="text" tabindex="1" [(ngModel)]="userLogin" placeholder="Enter your email" name="loginInput" required />
+
+        <div class="login__input-wrap">
+          <label class="cp-input-label">PASSWORD</label>
+          <a class="login__forgot-pswd" [routerLink]="['/forgot-password']" tabindex="-1">Forgot password?</a>
+          <div class="show-password">
+            <input #passwordInput class="cp-text-input login__text-input" type="password" tabindex="2" [(ngModel)]="userPassword" placeholder="Enter your password" name="passwordInput" required />
+            <button class="show-password__button" type="button" (click)="triggerPasswordVisibility()">
+              <i class="fa fa-eye" *ngIf="!isPasswordVisible" aria-hidden="true"></i>
+              <i class="fa fa-eye-slash" *ngIf="isPasswordVisible" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <footer class="cp-form__footer" style="display:block;">
+          <p-checkbox class="cp-primeng-checkbox" name="rememberMeCB" label="KEEP ME LOGGED IN" [(ngModel)]="userKeepLoggedIn" binary="true"></p-checkbox>
+          <button type="submit" class="flat accent shadow" [disabled]="loginForm.form.invalid">SIGN IN</button>
+        </footer>
+      </form>
+
+      <!-- Forgot Password Form -->
+      <form *ngIf="activeRoute === '/forgot-password'" class="cp-form login__form" #forgotPasswordForm="ngForm" (submit)="sendPasswordReset()">
+        <header class="cp-form__header">
+          <img class="login__logo-mobile" src="../../../assets/images/control-point-logo--white-letters.png" alt="logo" />
+          <h1 class="cp-form__title">Forgot your password?</h1>
+          <p>Please enter the email address associated with your account.</p>
+        </header>
+
+        <label class="cp-input-label">EMAIL ADDRESS</label>
+        <input class="cp-text-input login__text-input" type="text" [(ngModel)]="forgotPasswordEmail" placeholder="Enter your email" name="emailInput" required />
+
+        <footer class="cp-form__footer">
+          <button type="submit" class="flat accent shadow" [disabled]="forgotPasswordForm.form.invalid">SEND LINK</button>
+        </footer>
+      </form>
+
+      <!-- Create Account Form -->
+      <form *ngIf="activeRoute && (activeRoute.includes('/create-account'))" class="cp-form login__form" #createPassword="ngForm" (submit)="setPassword()">
+        <header class="cp-form__header">
+          <img class="login__logo-mobile" src="../../../assets/images/control-point-logo--white-letters.png" alt="logo" />
+          <h1 *ngIf="activeRoute.includes('/create-account')" class="cp-form__title">Create your account</h1>
+        </header>
+
+        <div class="login__input-wrap">
+
+          <label class="cp-input-label">EMAIL ADDRESS</label>
+          <input class="cp-text-input login__text-input" type="text" [(ngModel)]="userEmailForPasswordSet" name="userEmailForPasswordSet" disabled />
+
+          <label class="cp-input-label">PASSWORD</label>
+          <div class="show-password">
+            <input #passwordInput class="cp-text-input login__text-input" type="password" [(ngModel)]="newPassword" placeholder="Create password" name="newPassword" required />
+            <button class="show-password__button" type="button" (click)="triggerPasswordVisibility()">
+              <i class="fa fa-eye" *ngIf="!isPasswordVisible" aria-hidden="true"></i>
+              <i class="fa fa-eye-slash" *ngIf="isPasswordVisible" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <footer class="cp-form__footer">
+          <button type="submit" class="flat accent shadow" [disabled]="createPassword.form.invalid">CONTINUE</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</div>

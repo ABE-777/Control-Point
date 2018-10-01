@@ -1,0 +1,82 @@
+<div class="padding-24" *ngIf="isSchoolConfigSet">
+
+  <div>
+    <button class="flat purple icon" [routerLink]="['/flights']">BACK TO FLIGHTS<i class="material-icons">arrow_back</i></button>
+  </div>
+
+
+  <div class="form-container w-48-perc">
+    <form #flightConfigurationForm="ngForm" (submit)="submitFlightConfiguration()">
+      <h1>Flight View Setup</h1>
+      <div class="label-input-container">
+        <label>DEFAULT LANE</label>
+        <p-dropdown [options]="lanesOptions" [(ngModel)]="teacherSettingsModel.laneId"
+                    [autoWidth]="false" (onChange)="changeScanningType($event)" name="laneId">
+
+          <ng-template let-item pTemplate="selectedItem">
+            <div class="color-palette-item lane-{{ item.icon ? item.icon.toLowerCase() : 'blank' }}" style="vertical-align:middle; position:absolute;"></div>
+            <span style="vertical-align:middle; position: absolute; left: 60px; top: 13px;">{{item.label}}</span>
+          </ng-template>
+          <ng-template let-lane pTemplate="item">
+            <div class="ui-helper-clearfix" style="position: relative;height:25px;">
+              <div class="color-palette-item lane-{{ lane.icon ? lane.icon.toLowerCase() : 'blank' }}" style="width:24px;position:absolute;top:1px;left:5px"></div>
+              <div style="font-size:14px;margin-top:4px;width: auto; position: absolute; top: 0px; left: 60px;">{{lane.label}}</div>
+            </div>
+          </ng-template>
+
+        </p-dropdown>
+      </div>
+
+      <br><h1>Columns</h1>
+      <div class="label-input-container cp-prime-table--purple">
+        <label>GRADE</label>
+        <div class="flex" style="padding:0px 18px;">
+          <div class="cp-switch">
+            <input class="cp-switch__checkbox" type="checkbox" [(ngModel)]="teacherSettingsModel.isGradeColumnVisible"
+                   name="isGrade" id="isGrade">
+            <label class="cp-switch__control" for="isGrade">
+              <span class="cp-switch__toggle"><i class="material-icons">done</i></span>
+            </label>
+          </div>
+          <label style="padding:0% 20%; margin-bottom:0px;">{{teacherSettingsModel.isGradeColumnVisible ? 'Visible' : 'Hidden'}}</label>
+        </div>
+
+      </div>
+      <div class="label-input-container cp-prime-table--purple">
+        <label>CAR</label>
+        <div class="flex" style="padding:0px 18px;">
+          <div class="cp-switch">
+            <input class="cp-switch__checkbox" type="checkbox" [(ngModel)]="teacherSettingsModel.isCarColumnVisible"
+                   name="isCar" id="isCar">
+            <label class="cp-switch__control" for="isCar">
+              <span class="cp-switch__toggle"><i class="material-icons">done</i></span>
+            </label>
+
+          </div>
+          <label style="padding:0% 20%; margin-bottom:0px;">{{teacherSettingsModel.isCarColumnVisible ? 'Visible' : 'Hidden'}}</label>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="flex-column padding-12">
+      <div class="align-end">
+        <button type="submit" class="flat accent shadow" [disabled]="" (click)="submitFlightConfiguration()"> SAVE </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- No items screen -->
+<div *ngIf="!isSchoolConfigSet" class="page-container" [ngClass]="{'full-height-page full-height-page--flex-column': !isSchoolConfigSet }">
+  <div class="no-items-view">
+    <p class="no-items-view__text" style="max-width: 325px;">Lane information has been configured yet. {{isAdmin? "Please go to School Configuration view and complete the 'Lane' section." : "Please contact your School Administrator." }} </p>
+    <br>
+    <div class="no-items-view__image-container no-items-view__image-container--not-clickable">
+      <img class="no-items-view__image" src="assets/images/menu_flights.svg" alt="new configurations">
+    </div>
+    <button *ngIf="isAdmin" class="item flat accent shadow" [routerLink]="['../school-configuration']" style="margin-bottom:30px;">GO TO SCHOOL CONFIGURATION</button>
+
+  </div>
+</div>

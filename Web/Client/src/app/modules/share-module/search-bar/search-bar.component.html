@@ -1,0 +1,6 @@
+<form #searchBarForm="ngForm" #searchBar class="search-bar" (submit)="submitSearch()">
+  <button class="search-bar__submit" type="submit" (click)="openSearchBar($event, searchInput)" [disabled]="searchBarForm.invalid || searchBarForm.pending">
+    <i class="material-icons">search</i>
+  </button>
+  <input #searchInput class="search-bar__input" minlength="3" [(ngModel)]="searchText" name="searchText" type="text" placeholder="Search">
+</form>

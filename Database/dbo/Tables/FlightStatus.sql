@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[FlightStatus]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [Name] VARCHAR(250) NULL 
+)

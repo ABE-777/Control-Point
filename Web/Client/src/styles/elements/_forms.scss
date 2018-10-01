@@ -1,0 +1,410 @@
+.cp-form {
+  max-width: 370px;
+  width: 100%;
+  margin: auto;
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  &__header {
+    margin-bottom: 20px;
+
+    @media (max-width: $bp-sm--max) {
+      margin-bottom: 10px;
+      text-align: center;
+    }
+  }
+
+  &__title {
+    margin-bottom: 6px;
+    font-size: 24px;
+    font-weight: 700;
+
+    @media (max-width: $bp-sm--max) {
+      font-size: 20px;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    justify-content: flex-end;
+    .cp-primeng-checkbox {
+      margin-right: auto;
+    }
+  }
+
+  &--big {
+    max-width: 725px;
+
+    .cp-form__header {
+      margin-top: 35px;
+      margin-bottom: 15px;
+
+      @media (max-width: $bp-sm--max) {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  @media (min-width: $bp-md) {
+    padding: 15px;
+  }
+}
+
+// TEXT INPUTS
+.cp-text-input,
+.cp-input-calendar--default .ui-inputtext {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 12px 18px;
+  height: 48px;
+  min-height: 48px;
+  border: 1px solid $c-grey-border;
+  border-radius: $input-border-radius;
+  font-size: 14px;
+  font-weight: 600;
+  transition: border-color 200ms;
+  box-shadow: $input-box-shadow;
+  color: $c-grey--dark2;
+
+  &:focus {
+    outline: none;
+    border-color: $c-purple;
+    box-shadow: $input-focus-box-shadow;
+  }
+
+  &::placeholder {
+    font-weight: 400;
+  }
+}
+
+textarea.cp-text-input {
+  height: auto;
+}
+
+.show-password {
+  position: relative;
+  width: 100%;
+  .cp-text-input {
+    padding-right: 50px;
+  }
+  &__button {
+    position: absolute;
+    right: 20px;
+    top: calc(50% - 5px);
+    transform: translateY(-50%);
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    font-size: 20px;
+    color: $c-grey;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+// LABELS
+.cp-input-label {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: $-text-weight-bold;
+  padding: 12px 15px;
+
+  small{
+    margin-left: 15px;
+    font-size: 11px;
+  }
+
+  .cp-primeng-checkbox {
+    margin-right: 10px;
+  }
+
+  .color-palette-item {
+    margin-left: 0;
+    margin-right: 15px;
+  }
+}
+
+// CHECKBOXES
+.cp-switch {
+  &__checkbox {
+    width: 0;
+    height: 0;
+    margin: 0 !important;
+    overflow: hidden;
+    visibility:hidden;
+
+    &:not(:checked) + .cp-switch__control {
+      background-color: $c-grey;
+
+      .cp-switch__toggle {
+        right: 19px;
+
+        .material-icons {
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  &__control {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    margin-bottom: 0;
+    border-radius: 12px;
+    background-color: $c-grey;
+    cursor: pointer;
+  }
+
+  &__toggle {
+    position: absolute;
+    top: 0;
+    right: auto;
+    right: -1px;
+    width: 24px;
+    height: 24px;
+    padding: 3px;
+    border-radius: 50%;
+    background-color: white;
+    color: $c-grey;
+    box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+    transition: right 300ms, background-color 300ms;
+    user-select: none;
+
+    .material-icons {
+      opacity: 1;
+      font-size: 18px;
+      transition: opacity 300ms;
+    }
+  }
+}
+
+// DROPDOWNS
+// Bootstrap dropdown
+.dropdown-menu {
+  border-radius: 10px;
+  .dropdown-item {
+    min-height: 40px;
+    line-height: 2.5;
+    font-size: 14px;
+    cursor: pointer;
+  }
+}
+
+// Color Palette Dropdown
+.color-selector-drop-down {
+  button.dropdown-toggle {
+    height: 48px;
+    width: 80px;
+    box-sizing: border-box;
+    padding: 0;
+    background: $c-white;
+    border: 1px solid $c-grey-border;
+    border-radius: $input-border-radius;
+    box-shadow: $input-box-shadow;
+
+    &::after {
+      /*display: inline;*/
+      display: none;
+      /*vertical-align: 50%;*/
+    }
+  }
+  .dropdown-menu {
+    width: 100%;
+    min-width: unset;
+
+    button.dropdown-item {
+      padding: unset;
+    }
+  }
+}
+
+.color-palette-container {
+  position: relative;
+  display: flex;
+  height: 42px;
+  width: 60px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 60px;
+    display: inline-block;
+    border-top: 0.4em solid;
+    border-right: 0.4em solid transparent;
+    border-bottom: 0;
+    border-left: 0.4em solid transparent;
+    transform: translateY(-50%);
+  }
+}
+
+.color-palette-item {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin: auto;
+
+  &--blank {
+    border: 1px solid $c-grey--dark1;
+    background-color: transparent;
+  }
+
+  &--yellow {
+    background-color: $c-yellow;
+  }
+
+  &--purple {
+    background-color: $c-purple;
+  }
+
+  &--green {
+    background-color: $c-green;
+  }
+
+  &--orange {
+    background-color: $c-orange;
+  }
+
+  &--blue {
+    background-color: $c-blue;
+  }
+
+  &--red {
+    background-color: $c-red;
+  }
+
+  &--pink {
+    background-color: $c-pink;
+  }
+
+  &--black {
+    background-color: $c-black;
+  }
+}
+
+//Input primeng calendar
+.cp-input-calendar  {
+  .ui-calendar {
+    width: 100%;
+  }
+
+  .ui-datepicker.ui-widget .ui-datepicker-header {
+    border-radius: 8px;
+  }
+
+  .ui-widget-header {
+    background: #fff;
+    border-bottom: 0;
+  }
+
+  .ui-datepicker {
+    width: auto;
+    box-shadow: 0 0 6px 0 rgba(0,0,0,0.15);
+  }
+
+  .ui-datepicker.ui-widget .ui-datepicker-calendar thead th {
+    background-color: #fff;
+  }
+
+  .ui-datepicker.ui-widget .ui-datepicker-calendar td {
+    border-bottom: 0;
+  }
+
+  .ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
+    background-color: $c-orange;
+  }
+
+  .ui-datepicker.ui-widget .ui-datepicker-calendar td a {
+    width: 28px;
+    height: 28px;
+    padding: 6px;
+    border-radius: 50%;
+  }
+
+  .ui-corner-all {
+    border-radius: 8px;
+  }
+
+  &--minimal-input {
+    .ui-inputtext {
+      display: block;
+      width: 100%;
+      padding: 6px 13px;
+      border: 0;
+      border-bottom: 1px solid $c-grey-border;
+      border-radius: 0;
+      font-size: 16px;
+      background-color: transparent;
+      transition: border-color 200ms;
+
+      &:focus {
+        outline: none;
+        border-color: $c-grey--dark1;
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+// TODO: Need refactoring
+.form-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+  width: 100%;
+  margin: auto;
+  padding: 20px;
+
+  input[type="text"],
+  input[type="password"],
+  p-dropdown {
+    width: 100%;
+  }
+
+  &--full-width {
+    max-width: 100%;
+  }
+}
+
+.label-input-container {
+
+  & > label,
+  &>div> label{
+    font-size: 12px;
+    font-weight: $-text-weight-bold;
+    padding: 18px 18px;
+  }
+
+  & > input,
+  & > div > input{
+    display: block;
+    padding: 12px 18px;
+    height: 48px;
+    border: 1px solid $c-grey-border;
+    border-radius: 8px;
+    font-size: 14px;
+    &:focus {
+      outline: none;
+      border-color: $c-purple;
+    }
+  }
+}
+
+label-checkbox-container {
+
+  input[type="checkbox"] {
+    margin-left: 4px;
+    margin-right: 24px;
+  }
+}
+
+input[type=checkbox] {
+  margin: 8px;
+}

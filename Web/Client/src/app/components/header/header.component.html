@@ -1,0 +1,48 @@
+<header class="main-header">
+  <!-- left-content -->
+  <div class="main-header__inner-wrap">
+    <app-main-menu *ngIf="!noMenu" class="main-header__main-menu" (stateChanged)="changeLogo($event)"></app-main-menu>
+    <!-- logo -->
+    <a [routerLink]="['/']" class="main-header__logo">
+      <img src="assets/images/{{ isMenuOpen ? 'control-point-logo.png' : 'control-point-logo--white-letters.png' }}" alt="Control Point Logo">
+    </a>
+    <!-- /logo -->
+  </div>
+  <!-- /left-content -->
+
+  <!-- middle-content -->
+  <div class="main-header__inner-wrap main-header__inner-wrap--middle">
+    <a [routerLink]="['/']"><span class="main-header__school-title" (click)="goToSchoolView()">{{userData?.schoolName}}</span>  </a>
+  </div>
+  <!-- /middle-content -->
+
+  <!-- right-content -->
+  <div class="main-header__inner-wrap main-header__inner-wrap--right">
+    <!-- user-info -->
+
+    <div class="btn-group">
+      <div class="dropdown">
+          <button class="btn dd-toggle" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+            <div class="main-header__user-info">
+              <div class="main-header__user-data">
+                <span class="main-header__user-title bold">{{ userData?.username }}</span>
+                <span class="main-header__user-subtitle">{{ userData?.role }}</span>
+              </div>
+              <div class="main-header__user-pic">
+                <img [src]="userPic" alt="User Avatar">
+              </div>
+            </div>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            <button class="dropdown-item" type="button" *ngIf="authService.matchRoles(roles.parent)" (click)="downloadInstructions()">Car Rider Procedures</button>
+            <button class="dropdown-item" type="button" *ngIf="authService.matchRoles(roles.classroomTeacher, roles.dismissalTeacher)" [routerLink]="['archive']">Archive</button>
+            <button class="dropdown-item" type="button" *ngIf="showFlightViewConfigItem && authService.matchRoles(roles.schoolAdmin, roles.classroomTeacher, roles.dismissalTeacher)" [routerLink]="['../flight-view-configuration']">Flight View Setup</button>
+            <button class="dropdown-item" type="button" [routerLink]="['../user-configuration']">User Configuration</button>
+            <button class="dropdown-item" type="button" (click)="logout()">Log Out</button>
+          </div>
+        </div>
+    </div>
+    <!-- /user-info -->
+  </div>
+  <!-- /right-content -->
+</header>

@@ -1,0 +1,9 @@
+<div class="flight-selector">
+  <button type="button" class="flight-selector__btn"
+          *ngFor="let flight of flights; let i = index"
+          [ngClass]="{'is-closed': flight.status === 'Closed', 'is-active': flight.flightId === _activeFlight.flightId}"
+          (click)="setActiveFlight(flight)"
+          >
+          {{ flight.flightNumber }}
+  </button>
+</div>

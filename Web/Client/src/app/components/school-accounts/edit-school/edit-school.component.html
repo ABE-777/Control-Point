@@ -1,0 +1,125 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="page-header__left">
+      <button class="flat purple icon" [routerLink]="['/school-accounts']">BACK TO ACCOUNTS
+        <i class="material-icons">arrow_back</i>
+      </button>
+    </div>
+  </header>
+
+  <form class="cp-form" #newSchoolForm="ngForm" (ngSubmit)="submitSchool()">
+      <header class="cp-form__header">
+        <h1 class="cp-form__title">{{ createEditItemService.isEditMode ? 'Edit School' : 'Create School'}}</h1>
+      </header>
+
+      <label class="cp-input-label">SCHOOL NAME</label>
+      <input class="cp-text-input" type="text" name="nameInput"
+             #nameInput="ngModel" [(ngModel)]="schoolModel.schoolName"
+             whitespace-validator required />
+      <!-- nameInput validation -->
+      <div *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)"
+           class="alert alert-danger">
+        <div *ngIf="nameInput?.errors.required">School name is required</div>
+        <div *ngIf="nameInput?.errors.invalidWhitespace">You can't use white spaces as school name!</div>
+      </div>
+
+      <label class="cp-input-label">STATE</label>
+      <p-dropdown [options]="states" [(ngModel)]="selectedState" optionLabel="name"
+        [autoWidth]="false" (onChange)="filterDistricts($event.value, true)" name="stateInput"
+        #stateInput="ngModel" placeholder="Select State" required>
+      </p-dropdown>
+      <!-- stateInput validation -->
+      <div *ngIf="stateInput.invalid && (stateInput.dirty || stateInput.touched)"
+           class="alert alert-danger">
+       <div *ngIf="stateInput?.errors.required">State is required</div>
+     </div>
+
+      <label class="cp-input-label">DISTRICT</label>
+      <p-dropdown [options]="filteredDistricts" [(ngModel)]="selectedDistrict"
+        optionLabel="name" [autoWidth]="false" filter="true" name="districtInput"
+        #districtInput="ngModel" placeholder="Select District"
+        [disabled]="newSchoolForm?.controls.stateInput?.invalid" required>
+      </p-dropdown>
+      <!-- districtInput validation -->
+      <div *ngIf="districtInput.invalid && (districtInput.dirty || districtInput.touched)"
+           class="alert alert-danger">
+        <div *ngIf="districtInput?.errors.required">District is required</div>
+      </div>
+
+      <!-- FIELDS FOR CREATING SCHOOL ONLY -->
+      <div *ngIf="!createEditItemService.isEditMode">
+        <label class="cp-input-label">SCHOOL ADMIN</label>
+        <input class="cp-text-input" type="text" name="schoolAdminInput"
+               [(ngModel)]="schoolModel.schoolAdmins[0].name" minlength="3" maxlength="256"
+               #schoolAdminInput="ngModel" pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$" required whitespace-validator />
+        <!-- schoolAdminInput validation -->
+        <div *ngIf="schoolAdminInput.invalid && (schoolAdminInput.dirty || schoolAdminInput.touched)"
+             class="alert alert-danger">
+          <div *ngIf="schoolAdminInput?.errors.invalidWhitespace"> You can't use whitespaces as admin name!</div>
+          <div *ngIf="schoolAdminInput?.errors.required">School admin name is required</div>
+          <div *ngIf="schoolAdminInput?.errors.minlength">School admin name must be at least 3 characters long.</div>
+          <div *ngIf="schoolAdminInput?.errors.pattern">School admin name is invalid!</div>
+        </div>
+
+        <label class="cp-input-label">EMAIL</label>
+        <input class="cp-text-input" type="text" name="emailInput"
+               [(ngModel)]="schoolModel.schoolAdmins[0].email" #emailInput="ngModel"
+               pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}"
+               [ngModelOptions]="{updateOn: 'blur'}" appIsUserExist required />
+        <!-- emailInput validation -->
+        <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)"
+             class="alert alert-danger">
+          <div *ngIf="emailInput?.errors.pattern">Email is invalid</div>
+          <div *ngIf="emailInput?.errors.required">Email is required</div>
+          <div *ngIf="emailInput?.errors.isEmailExist">User with email {{ emailInput.model }} already exist</div>
+        </div>
+      </div>
+
+      <!-- FIELDS FOR EDITING SCHOOL ONLY -->
+      <div *ngIf="createEditItemService.isEditMode">
+        <label class="cp-input-label">MAIN SCHOOL ADMIN</label>
+        <p-dropdown [options]="schoolModel.schoolAdmins" [(ngModel)]="selectedAdmin"
+          optionLabel="name" [autoWidth]="false" name="selectedAdmin"
+          #schoolAdmin="ngModel" placeholder="Select Admin" required>
+        </p-dropdown>
+        <!-- schoolAdmin validation -->
+        <div *ngIf="schoolAdmin.invalid && (schoolAdmin.dirty || schoolAdmin.touched)"
+             class="alert alert-danger">
+          <div *ngIf="schoolAdmin?.errors.required">School Admin is required</div>
+        </div>
+
+        <div *ngIf="!selectedAdmin.id">
+          <label class="cp-input-label">NEW SCHOOL ADMIN</label>
+          <input class="cp-text-input" type="text"
+                 name="newSchoolAdminInput" #newSchoolAdminInput="ngModel"
+                 [(ngModel)]="newAdmin.name"
+                 minlength="3" maxlength="256" required
+                 pattern="^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$" />
+          <!-- newSchoolAdminInput validation -->
+          <div *ngIf="newSchoolAdminInput.invalid && (newSchoolAdminInput.dirty || newSchoolAdminInput.touched)"
+               class="alert alert-danger">
+            <div *ngIf="newSchoolAdminInput?.errors.required">School admin name is required</div>
+            <div *ngIf="newSchoolAdminInput?.errors.pattern">School admin name is invalid!</div>
+            <div *ngIf="newSchoolAdminInput?.errors.minlength">School admin name must be at least 3 characters long.</div>
+          </div>
+
+          <label class="cp-input-label">EMAIL</label>
+          <input class="cp-text-input" type="text"
+                 name="newAdminEmailInput" #newAdminEmailInput="ngModel"
+                 [(ngModel)]="newAdmin.email" [ngModelOptions]="{updateOn: 'blur'}"
+                 pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}" appIsUserExist required />
+          <!-- newAdminEmailInput validation -->
+          <div *ngIf="newAdminEmailInput.invalid && (newAdminEmailInput.dirty || newAdminEmailInput.touched)"
+               class="alert alert-danger">
+            <div *ngIf="newAdminEmailInput?.errors.pattern">Email is invalid</div>
+            <div *ngIf="newAdminEmailInput?.errors.required">Email is required</div>
+            <div *ngIf="newAdminEmailInput?.errors.isEmailExist">User with email {{ newAdminEmailInput.model }} already exist</div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="cp-form__footer">
+        <button type="submit" class="flat accent shadow" [disabled]="newSchoolForm.invalid || newSchoolForm.pending">{{ createEditItemService.isEditMode ? 'SAVE' : 'CREATE'}}</button>
+      </footer>
+  </form>
+</div>

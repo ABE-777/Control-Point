@@ -1,0 +1,123 @@
+<div class="page-container" [ngClass]="{'full-height-page full-height-page--flex-column': !dismissalCardsListHttpModel?.cards?.length }">
+ 
+  <header class="page-header">
+    <div class="page-header__left">
+      <h3 class="page-header__title">Dismissal Cards</h3>
+    </div>
+
+    <div class="page-header__right">
+      <search-bar [data]="dismissalCards" [filters]="['parentName', 'status']" [nestedFilters]="{ propWithArray: 'students', filters: ['name', 'classroomTeacher'] }" (searchEnd)="setFilteredCards($event)"></search-bar>
+      <button type="submit" class="item flat accent shadow" [disabled]="!selectedCardsId.length" (click)="printSelectedCards()">PRINT SELECTED</button>
+      <button type="submit" class="item flat accent shadow" [disabled]="!isHasStudentsAtSchool" (click)="goToCreate()">ADD</button>
+    </div>
+  </header>
+  <div class="grid-container" *ngIf="filteredCards.length">
+
+    <dx-data-grid class="cp-data-grid" [dataSource]="filteredCards" [showBorders]="false"
+                  [showRowLines]="true" [showColumnLines]="false" [loadPanel]="false"
+                  (onContentReady)="gridReady($event)">
+      <dxo-sorting mode="single">
+        <!-- or "multiple" | "none" -->
+      </dxo-sorting>
+      <dxi-column cellTemplate="checkCell" headerCellTemplate="checkHeaderCell" [width]="50" alignment="center"></dxi-column>
+      <dxi-column dataField="parentName" caption="PARENT/GUARDIAN" alignment="left"></dxi-column>
+      <dxi-column dataField="students" caption="STUDENT" cellTemplate="studentsNameCell" [calculateSortValue]="studentCustomSortingFunction"></dxi-column>
+      <dxi-column dataField="students" caption="GRADE" [width]="120" cellTemplate="studentsGradeCell" [calculateSortValue]="gradeCustomSortingFunction"></dxi-column>
+      <dxi-column dataField="students" caption="INSTRUCTOR" cellTemplate="studentsInstructorsCell" [calculateSortValue]="instructorCustomSortingFunction"></dxi-column>
+      <dxi-column dataField="status" caption="STATUS" cellTemplate="statusCell" alignment="left" sortOrder="desc"></dxi-column>
+      <dxi-column cellTemplate="optionsCell" cssClass="w-70-px overflow-visible" alignment="center"></dxi-column>
+
+      <!-- Cells templates -->
+      <div *dxTemplate="let cell of 'statusCell'" class="text-ellipsis">
+        <span class="status-field {{ getCardStatusClass(cell.data.status) }}">{{cell.data.status}}</span>
+      </div>
+
+      <div *dxTemplate="let cell of 'checkHeaderCell'">
+        <p-checkbox class="cp-primeng-checkbox" name="checkedAll" (onChange)="selectAll()" [(ngModel)]="selectedAll" binary="true"></p-checkbox>
+      </div>
+
+      <div *dxTemplate="let cell of 'checkCell'">
+        <p-checkbox class="cp-primeng-checkbox" name="checkCard" value="{{cell.data.id}}" [(ngModel)]="selectedCardsId" inputId="{{cell.data.id}}"></p-checkbox>
+      </div>
+
+      <div *dxTemplate="let cell of 'studentsNameCell'">
+        <span style="white-space: pre; line-height: 2">{{getStudentsNames(cell.data.students)}}</span>
+      </div>
+
+      <div *dxTemplate="let cell of 'studentsGradeCell'">
+        <span style="white-space: pre; line-height: 2">{{getStudentsGrades(cell.data.students)}}</span>
+      </div>
+
+      <div *dxTemplate="let cell of 'studentsInstructorsCell'">
+        <span style="white-space: pre; line-height: 2">{{getStudentsInstructors(cell.data.students)}}</span>
+      </div>
+
+      <div *dxTemplate="let cell of 'optionsCell'">
+        <div class="btn-group">
+          <div class="dropdown">
+            <button class="btn dd-toggle" data-toggle="dropdown" data-offset="0%, -100%" data-flip="false" aria-haspopup="true" aria-expanded="false">
+              <span>
+                <i class="material-icons">more_vert</i>
+              </span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+              <button class="dropdown-item" type="button" (click)="goToEdit(cell.data.id, cell.data.userId)">Edit</button>
+              <button class="dropdown-item" type="button" (click)="setFocusCard(cell.data); printCard()">Print</button>
+              <button class="dropdown-item" type="button" (click)="setFocusCardId(cell.data.id); modalService.openModal(deleteDismissalCard)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <dxo-paging [pageSize]="10"></dxo-paging>
+      <dxo-pager [showNavigationButtons]="true"></dxo-pager>
+    </dx-data-grid>
+    <app-paginator></app-paginator>
+  </div>
+
+
+  <!-- No items screen -->
+  <div class="no-items-view" *ngIf="!dismissalCardsListHttpModel?.cards?.length">
+    <p class="no-items-view__text" style="max-width: 350px;">Please create your first dismissal card. You must first have students uploaded into the system.</p>
+    <br>
+    <div class="no-items-view__image-container no-items-view__image-container--not-clickable">
+      <img class="no-items-view__image" src="assets/images/kid_dismissal.svg" alt="new configurations">
+    </div>
+
+  </div>
+
+
+</div>
+
+<!--Dismissal Card printing template-->
+<div style="display: none" *ngIf="printing">
+  <article class="cp-card" *ngFor="let card of cardsToPrint; let i = index">
+    <div id="js-card-to-print" class="js-card-to-print">
+      <div *ngFor="let student of card.students; let st=index">
+        <ngx-barcode id="student-card-{{i}}-{{st}}" class="cp-card__barcode" [ngClass]="{'cp-card__barcode--sm': card.students.length > 1 }"
+                     [bc-value]="convertCardforBarcode(card.id, student.id)"></ngx-barcode>
+
+      </div>
+    </div>
+  </article>
+  </div>
+
+<ng-template #deleteDismissalCard>
+  <div class="cp-modal">
+    <header class="cp-modal__header">
+      <h5 class="cp-modal__title">Delete Dismissal Card?</h5>
+    </header>
+
+    <p class="cp-modal__text">
+      Are you sure you want to delete this Dismissal Card?<br />
+      This action can not be undone!
+    </p>
+
+    <footer class="cp-modal__footer">
+      <button class="flat black" (click)="modalService.modalRef.hide()">CANCEL</button>
+      <button class="flat accent shadow" (click)="deleteCard(); modalService.modalRef.hide()">DELETE</button>
+    </footer>
+  </div>
+</ng-template>
+

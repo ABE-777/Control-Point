@@ -1,0 +1,10 @@
+<div class="lane-selector">
+  <button class="lane-selector__btn lane-selector__btn--{{lane.color.toLowerCase()}}"
+          *ngFor="let lane of _lanes" [ngClass]="{'is-active': lane.laneId === _activeLane.laneId || (lane.laneId === _nextActiveLane?.laneId && isLandscape)}"
+          (click)="setActiveLane(lane)">
+    <span class="lane-selector__lane-name">{{ lane.name.toUpperCase() }}</span>
+    <div class="lane-selector__lane-panel">
+      <div class="lane-selector__active-lane-panel"></div>
+    </div>
+  </button>
+</div>

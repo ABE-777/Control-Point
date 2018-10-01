@@ -1,0 +1,13 @@
+@mixin font-size($size) {
+  font-size: $size;
+}
+
+@mixin keep-aspect-ratio {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+@mixin fullheight {
+  height: 100vh;
+}

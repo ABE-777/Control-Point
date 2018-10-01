@@ -1,0 +1,31 @@
+<div class="full-height-page full-height-page--flex-column page-container">
+  <header class="page-header">
+    <div class="page-header__left">
+      <button class="flat purple icon" [routerLink]="['/students']">BACK TO STUDENTS
+        <i class="material-icons">arrow_back</i>
+      </button>
+    </div>
+    <div class="page-header__right">
+      <button class="flat black" (click)="downloadStudentsTemplate()">DOWNLOAD TEMPLATE</button>
+    </div>
+  </header>
+
+  <div id="dropZone" class="no-items-view drop-zone" ng2FileDrop [uploader]="fileTransferService.uploader" (fileOver)="fileTransferService.fileOverBase($event)" [ngClass]="{'drop-zone--file-over': fileTransferService.isFileOverDropZone}">
+    <h4 class="no-items-view__title">Add New Students</h4>
+    <p class="no-items-view__text">Drop new student files here in .xlsx format. <br> Old student files dropped here will result in duplications.</p>
+
+    <!-- file validation -->
+    <p *ngIf="!fileTransferService.isValidFileExtension" class="file-validation warning">"Invalid file selected."</p>
+    <p *ngIf="fileTransferService.isUploadSuccessfull" class="file-validation success">{{fileTransferService.message}}</p>
+    <p *ngIf="fileTransferService.isUploadFailed" class="file-validation warning">"File upload failed."</p>
+
+    <button class="no-items-view__image-container" (click)="fileUpload.click()">
+      <img class="no-items-view__image" src="assets/images/no-students.svg" alt="new school">
+    </button>
+
+    <input type="file" name="file" id="file" #fileUpload class="hidden" ng2FileSelect [uploader]="fileTransferService.uploader" />
+    <button class="item flat accent shadow" for="file" (click)="fileUpload.click()">CLICK TO BROWSE</button>
+  </div>
+</div>
+
+

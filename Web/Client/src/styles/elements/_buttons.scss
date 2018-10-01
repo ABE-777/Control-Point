@@ -1,0 +1,108 @@
+// TODO: NEED TO REFACTOR ---------------
+
+.flat {
+  border-radius: 50px;
+  border: none;
+  min-height: 48px;
+  min-width: 130px;
+  padding: 12px 35px;
+  font-size: 14px;
+  font-weight: $-text-weight-bold;
+  background-color: transparent;
+  cursor: pointer;
+  transition: opacity 250ms ease-in-out;
+
+  &.accent {
+    background-color: $c-orange;
+    color: $c-white;
+    &.shadow {
+      box-shadow: rgba($c-orange, 0.9) 0px 3px 6px;
+    }
+  }
+
+  &.blue {
+    color: $c-blue;
+    border: 1px solid $c-blue;
+  }
+
+  &.purple {
+    color: $c-purple;
+    border: 1px solid $c-purple;
+  }
+
+  &.black {
+    color: $c-black;
+    border: 1px solid $c-black;
+  }
+
+  &.form-submit {
+    margin-top: 30px;
+    align-self: flex-end;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &[disabled] {
+    background-color: $c-grey;
+    cursor: not-allowed;
+    &.shadow {
+      box-shadow: rgba($c-grey, 0.9) 0px 3px 6px;
+    }
+  }
+
+  & + .flat {
+    margin-left: 15px;
+  }
+}
+
+button.icon {
+  padding-left: 36px;
+  padding-right: 24px;
+
+  .material-icons {
+    vertical-align: -25%;
+    padding-left: 24px;
+  }
+}
+// TODO: -------------------------
+
+.cp-button {
+  display: flex;
+  align-items: center;
+
+  &__text {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  &__icon {
+    margin-left: auto;;
+  }
+
+  &--ghost {
+    background-color: transparent;
+    border: 1px solid $c-orange;
+    color: $c-orange;
+  }
+
+  &--back {
+    min-width: 215px;
+  }
+
+  &--style-2 {
+    border: 0;
+    background-color: transparent;
+    font-family: $f-second;
+    text-decoration: underline;
+    color: $c-purple--dark;
+    font-size: 14px;
+    font-weight: bold;
+  }
+}
+

@@ -1,0 +1,9 @@
+<app-scanner-entry *ngIf="isScannerInitDataReady && !scannerService.scannedStudents.length"></app-scanner-entry>
+<app-scanned-students-list *ngIf="isScannerInitDataReady && scannerService.scannedStudents.length"></app-scanned-students-list>
+
+<form class="scanner-form" (ngSubmit)="scannerService.sendScanText()">
+  <input type="text" name="scan-text" id="scan-text" readonly [(ngModel)]="scannerService.scanText" (focus)="scannerService.toggleScanMode()" (blur)="scannerService.toggleScanMode()" pInputText (keypress)="scannerService.buildScanText($event)">
+</form>
+
+
+

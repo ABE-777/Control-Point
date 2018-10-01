@@ -1,0 +1,52 @@
+<div class="main-menu">
+  <button class="main-menu__hamburger" #hamburger>
+    <span class="hamburger-line"></span>
+  </button>
+  <div class="main-menu__wrap" #menuWrap>
+    <div class="main-menu__panel">
+      <nav class="main-menu__list">
+        <a class="main-menu__link" [routerLink]="['archive']" [routerLinkActive]="'main-menu__link--current'" *ngIf="authService.matchRoles(roles.schoolAdmin, roles.superAdmin)">
+          <div class="main-menu__icon i-archive"></div>
+          <span>Archive</span>
+        </a>
+
+        <a class="main-menu__link" [routerLink]="['flights']" [routerLinkActive]="'main-menu__link--current'" *ngIf="authService.matchRoles(roles.schoolAdmin, roles.classroomTeacher, roles.dismissalTeacher, roles.superAdmin)">
+          <div class="main-menu__icon i-flights"></div>
+          <span>Flights</span>
+        </a>
+
+        <a class="main-menu__link" [routerLink]="['scanner']" [routerLinkActive]="'main-menu__link--current'" *ngIf="authService.matchRoles(roles.scanner)">
+          <div class="main-menu__icon i-scanner"></div>
+          <span>Scanner Role</span>
+        </a>
+
+        <a class="main-menu__link" [routerLink]="['dismissal-cards']" [routerLinkActive]="'main-menu__link--current'" *ngIf="authService.matchRoles(roles.schoolAdmin, roles.superAdmin)">
+          <div class="main-menu__icon i-cards"></div>
+          <span>Dismissal Cards</span>
+        </a>
+
+        <a class="main-menu__link" [routerLink]="['students']" [routerLinkActive]="'main-menu__link--current'" *ngIf="authService.matchRoles(roles.schoolAdmin, roles.superAdmin)">
+          <div class="main-menu__icon i-students"></div>
+          <span>Students</span>
+        </a>
+
+        <a class="main-menu__link" [routerLink]="['users-management']" [routerLinkActive]="'main-menu__link--current'" *ngIf="authService.matchRoles(roles.schoolAdmin, roles.superAdmin)">
+          <div class="main-menu__icon i-users"></div>
+          <span>Users</span>
+        </a>
+
+        <a class="main-menu__link" [routerLink]="['classrooms']" [routerLinkActive]="'main-menu__link--current'" *ngIf="authService.matchRoles(roles.schoolAdmin, roles.superAdmin)">
+          <div class="main-menu__icon i-classrooms"></div>
+          <span>Classrooms</span>
+        </a>
+
+        <a class="main-menu__link" [routerLink]="['school-configuration']" [routerLinkActive]="'main-menu__link--current'" *ngIf="authService.matchRoles(roles.schoolAdmin, roles.superAdmin)">
+          <div class="main-menu__icon i-config"></div>
+          <span>School Configuration</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+</div>
+
+

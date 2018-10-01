@@ -1,0 +1,18 @@
+@import '../base/_variables';
+
+.file-validation {
+  font-weight: $-text-weight-bold;
+
+  &.warning {
+    color: $c-red;
+  }
+
+  &.attention {
+    color: $c-yellow;
+  }
+
+  &.success {
+    color: $c-green;
+  }
+}
+
